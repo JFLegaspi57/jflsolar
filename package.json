@@ -1,0 +1,45 @@
+{
+  "name": "jflsolar",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint",
+    "typecheck": "next typegen && tsc --noEmit",
+    "test": "tsx --test tests/**/*.test.ts",
+    "check": "npm run lint && npm run typecheck && npm run test",
+    "db:seed:generate": "tsx scripts/generate-seed.ts",
+    "brand:assets": "node scripts/build-brand-assets.mjs",
+    "admin:grant": "tsx scripts/admin-grant.ts",
+    "launch:check": "tsx scripts/launch-check.ts",
+    "qa:browser": "node scripts/qa/browser.mjs"
+  },
+  "dependencies": {
+    "@supabase/ssr": "^0.12.7",
+    "@supabase/supabase-js": "^2.117.3",
+    "next": "16.4.0",
+    "react": "19.3.0",
+    "react-dom": "19.3.0",
+    "server-only": "^0.0.1",
+    "sharp": "^0.35.5"
+  },
+  "devDependencies": {
+    "@electric-sql/pglite": "^0.5.8",
+    "@tailwindcss/turbopack": "^4",
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "axe-core": "^4.14.0",
+    "eslint": "^9",
+    "eslint-config-next": "16.4.0",
+    "puppeteer-core": "^25.13.0",
+    "tailwindcss": "^4",
+    "tsx": "^4.23.15",
+    "typescript": "^5"
+  },
+  "engines": {
+    "node": ">=20.9"
+  }
+}
