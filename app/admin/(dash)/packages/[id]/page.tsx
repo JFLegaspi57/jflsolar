@@ -48,17 +48,19 @@ async function Editor({ params }: Pick<PageProps<"/admin/packages/[id]">, "param
         )}
       </EditHeader>
 
-      <details className="mb-8 rounded-[var(--radius-panel)] border border-steel-200 bg-white p-4">
+      <PackageForm values={packageValues(pkg)} id={pkg.id} version={pkg.updated_at} status={pkg.status} />
+      <div className="mb-28 space-y-8">
+      <details className="rounded-[var(--radius-panel)] border border-steel-200 bg-white p-4">
         <summary className="inline-flex min-h-11 cursor-pointer items-center font-semibold text-steel-900">Preview card (as saved)</summary>
         <div className="mt-3 max-w-sm">
           <PackageCard pkg={{ ...pkg, promo_state: promo, images }} />
         </div>
       </details>
 
-      <div className="mb-8">
+      <div>
         <ImageManager owner={{ kind: "package", id: pkg.id }} images={images.filter((m) => m.kind === "image")} />
       </div>
-      <PackageForm values={packageValues(pkg)} id={pkg.id} version={pkg.updated_at} status={pkg.status} />
+      </div>
     </>
   );
 }

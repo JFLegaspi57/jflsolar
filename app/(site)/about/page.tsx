@@ -69,7 +69,7 @@ export default async function AboutPage() {
                   {b.title}
                   <ClaimMarker block={b} />
                 </figcaption>
-                <blockquote className="mt-4 font-display text-xl leading-snug font-semibold text-white sm:text-2xl">{b.body}</blockquote>
+                <blockquote className="mt-4 text-lg leading-relaxed text-steel-100 sm:text-xl">{b.body}</blockquote>
               </figure>
             ))}
           </div>
@@ -159,9 +159,10 @@ function BlockPanel({ block, image }: { block: ContentBlock; image?: MediaAsset 
         </div>
       )}
       {block.subtitle && block.section === "why" && <p className="text-xs font-semibold tracking-wide text-gold-800 uppercase">{block.subtitle}</p>}
-      <h3 id={`b-${block.key}`} className="mt-1 flex flex-wrap items-center gap-2 text-xl font-bold text-steel-950">
-        {block.title} <ClaimMarker block={block} />
+      <h3 id={`b-${block.key}`} className="mt-1 text-xl font-bold text-steel-950">
+        {block.title}
       </h3>
+      <ClaimMarker block={block} className="mt-1.5" />
       <Paragraphs text={block.body} className="mt-2 text-steel-700" />
     </section>
   );

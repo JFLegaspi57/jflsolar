@@ -47,16 +47,18 @@ async function Editor({ params }: Pick<PageProps<"/admin/projects/[id]">, "param
           </p>
         )}
       </EditHeader>
-      <details className="mb-8 rounded-[var(--radius-panel)] border border-steel-200 bg-white p-4">
+      <ProjectForm values={projectValues(project)} id={project.id} version={project.updated_at} status={project.status} />
+      <div className="mb-28 space-y-8">
+      <details className="rounded-[var(--radius-panel)] border border-steel-200 bg-white p-4">
         <summary className="inline-flex min-h-11 cursor-pointer items-center font-semibold text-steel-900">Preview card (as saved)</summary>
         <div className="mt-3 max-w-sm">
           <ProjectCard mediaScope="admin" project={{ ...project, photos, cover: photos.find((p) => p.is_cover) ?? photos[0] ?? null }} />
         </div>
       </details>
-      <div className="mb-8">
+      <div>
         <ImageManager owner={{ kind: "project", id: project.id }} images={photos} title="Project photos" coverLabel="cover photo" />
       </div>
-      <ProjectForm values={projectValues(project)} id={project.id} version={project.updated_at} status={project.status} />
+      </div>
     </>
   );
 }

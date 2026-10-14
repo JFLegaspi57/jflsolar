@@ -19,11 +19,11 @@ export function AdminNav({ isOwner }: { isOwner: boolean }) {
   const active = (href: string) => (href === "/admin" ? pathname === "/admin" : pathname.startsWith(href));
   return (
     <nav aria-label="Admin">
-      <ul className="flex gap-1 overflow-x-auto px-3 pb-2 lg:flex-col lg:overflow-visible lg:px-0 lg:pb-0">
+      <ul className="flex flex-wrap gap-1 px-3 pb-3 lg:flex-col lg:flex-nowrap lg:px-0 lg:pb-0">
         {items
           .filter((i) => !i.ownerOnly || isOwner)
           .map((i) => (
-            <li key={i.href} className="shrink-0">
+            <li key={i.href}>
               <Link
                 href={i.href}
                 aria-current={active(i.href) ? "page" : undefined}

@@ -3,10 +3,14 @@
 import { useEffect, useState, useSyncExternalStore } from "react";
 import { MAX_COMPARE } from "@/lib/catalog";
 
+const button =
+  "inline-flex min-h-11 shrink-0 items-center rounded-[var(--radius-control)] bg-steel-900 px-4 text-sm font-semibold text-white hover:bg-steel-800 disabled:cursor-not-allowed disabled:opacity-50";
+
 /**
- * Submit bar for the package comparison GET form. Without JavaScript the form
- * still works (the compare page caps the selection at three). With JavaScript
- * it shows a live count and disables further boxes once three are chosen.
+ * Package comparison controls for the GET form `formId`.
+ * - In page flow (above the grid): instructions + submit. Works without JS.
+ * - After the first selection (JS only): a compact sticky bar so the action
+ *   stays reachable without covering cards before anything is chosen.
  */
 export function CompareBar({ formId }: { formId: string }) {
   const [count, setCount] = useState(0);
@@ -28,23 +32,28 @@ export function CompareBar({ formId }: { formId: string }) {
     return () => document.removeEventListener("change", sync);
   }, [formId]);
 
+  const status = count === 0 ? `Tick “Compare” on 2 or 3 packages to see them side by side.` : `${count} of ${MAX_COMPARE} selected`;
+
   return (
-    <div className="sticky bottom-0 z-30 border-t border-steel-200 bg-white/95 backdrop-blur">
-      <div className="mx-auto flex max-w-[76rem] flex-wrap items-center justify-between gap-3 px-4 py-3 sm:px-6 lg:px-8">
-        <p className="text-sm text-steel-700" role="status" aria-live="polite">
-          {count === 0
-            ? `Tick “Compare” on up to ${MAX_COMPARE} packages.`
-            : `${count} of ${MAX_COMPARE} selected${count >= MAX_COMPARE ? " — maximum reached" : ""}.`}
-        </p>
-        <button
-          type="submit"
-          form={formId}
-          disabled={hydrated && count < 2}
-          className="inline-flex min-h-11 items-center rounded-[var(--radius-control)] bg-steel-900 px-5 font-semibold text-white hover:bg-steel-800 disabled:cursor-not-allowed disabled:opacity-50"
-        >
+    <>
+      <div className="flex flex-wrap items-center justify-between gap-3 rounded-[var(--radius-control)] border border-steel-200 bg-steel-50 px-4 py-2.5">
+        <p className="text-sm text-steel-700">{status}</p>
+        <button type="submit" form={formId} disabled={hydrated && count < 2} className={button}>
           Compare selected
         </button>
       </div>
-    </div>
+      {hydrated && count > 0 && (
+        <div className="fixed inset-x-0 bottom-0 z-30 border-t border-steel-200 bg-white/95 shadow-[0_-4px_16px_rgb(0_0_0/0.06)] backdrop-blur">
+          <div className="mx-auto flex max-w-[76rem] items-center justify-between gap-3 px-4 py-2.5 sm:px-6 lg:px-8">
+            <p className="text-sm font-semibold text-steel-800" role="status" aria-live="polite">
+              {count} of {MAX_COMPARE} selected{count < 2 ? " — choose one more" : ""}
+            </p>
+            <button type="submit" form={formId} disabled={count < 2} className={button}>
+              Compare
+            </button>
+          </div>
+        </div>
+      )}
+    </>
   );
 }

@@ -72,6 +72,25 @@ function rows(): { label: string; render: (p: PublicPackage) => ReactNode }[] {
   ];
 }
 
+/** Mobile: one combined capacity row instead of three. */
+function mobileRows(table: ReturnType<typeof rows>) {
+  const capacity = new Set(["Inverter (kW)", "Solar array (kWp)", "Battery (kWh)"]);
+  const out = table.filter((r) => !capacity.has(r.label));
+  out.splice(out.findIndex((r) => r.label === "System type") + 1, 0, {
+    label: "Capacity",
+    render: (p) =>
+      [formatCapacity(p.inverter_kw, "kW"), formatCapacity(p.array_kwp, "kWp"), formatCapacity(p.battery_kwh, "kWh") ?? "no battery"]
+        .map((v) => v ?? "after assessment")
+        .join(" · "),
+  });
+  return out;
+}
+
+/** Short label for repeated use: text before an em dash, if any. */
+function shortName(name: string) {
+  return name.split(" — ")[0];
+}
+
 async function Comparison({ searchParams }: Pick<PageProps<"/packages/compare">, "searchParams">) {
   const { p } = await searchParams;
   const requested = [...new Set((Array.isArray(p) ? p : p ? p.split(",") : []).map((s) => s.trim()).filter(Boolean))];
@@ -153,43 +172,39 @@ async function Comparison({ searchParams }: Pick<PageProps<"/packages/compare">,
         </table>
       </div>
 
-      {/* <768px: attribute-first groups, no horizontal scrolling */}
-      <div className="space-y-6 md:hidden">
-        <ol className="space-y-1 text-sm text-steel-700">
-          {shown.map((s, i) => (
-            <li key={s.id}>
-              <span className="mr-2 inline-flex size-6 items-center justify-center rounded-full bg-steel-900 text-xs font-bold text-white">{i + 1}</span>
-              <Link href={`/packages/${s.slug}`} className="font-semibold text-steel-950 underline">
-                {s.name}
+      {/* <768px: attribute-first groups, each value labelled with its package; no horizontal scrolling */}
+      <div className="space-y-5 md:hidden">
+        <ul className="space-y-2">
+          {shown.map((s) => (
+            <li key={s.id} className="flex items-center justify-between gap-3 rounded-[var(--radius-control)] border border-steel-200 px-3 py-2">
+              <span className="min-w-0">
+                <Link href={`/packages/${s.slug}`} className="block font-semibold text-steel-950 underline">
+                  {s.name}
+                </Link>
+                {s.is_sample && <span className="text-xs font-semibold text-steel-600">Sample package</span>}
+              </span>
+              <Link
+                href={`/contact?package=${encodeURIComponent(s.slug)}#quote`}
+                className="inline-flex min-h-11 shrink-0 items-center rounded-[var(--radius-control)] bg-gold-500 px-3 text-sm font-semibold text-steel-950 hover:bg-gold-400"
+              >
+                Ask<span className="sr-only"> about {s.name}</span>
               </Link>
-              {s.is_sample && <span className="ml-2 text-xs font-semibold text-steel-600">(sample)</span>}
             </li>
           ))}
-        </ol>
-        {table.map((row) => (
+        </ul>
+        {mobileRows(table).map((row) => (
           <section key={row.label} aria-label={row.label} className="rounded-[var(--radius-panel)] border border-steel-200">
             <h2 className="border-b border-steel-200 bg-steel-50 px-4 py-2 text-sm font-bold text-steel-900">{row.label}</h2>
             <dl className="divide-y divide-steel-200">
-              {shown.map((s, i) => (
-                <div key={s.id} className="grid grid-cols-[1.75rem_1fr] gap-2 px-4 py-2.5">
-                  <dt>
-                    <span className="inline-flex size-6 items-center justify-center rounded-full bg-steel-900 text-xs font-bold text-white">{i + 1}</span>
-                    <span className="sr-only">{s.name}</span>
-                  </dt>
-                  <dd className="min-w-0 text-steel-800">{row.render(s)}</dd>
+              {shown.map((s) => (
+                <div key={s.id} className="px-4 py-2.5">
+                  <dt className="truncate text-xs font-semibold tracking-wide text-steel-600 uppercase">{shortName(s.name)}</dt>
+                  <dd className="mt-0.5 min-w-0 text-steel-800">{row.render(s)}</dd>
                 </div>
               ))}
             </dl>
           </section>
         ))}
-        <div className="space-y-2">
-          {shown.map((s, i) => (
-            <ButtonLink key={s.id} href={`/contact?package=${encodeURIComponent(s.slug)}#quote`} variant={i === 0 ? "primary" : "secondary"} className="w-full">
-              Ask about package {i + 1}
-              <span className="sr-only">: {s.name}</span>
-            </ButtonLink>
-          ))}
-        </div>
       </div>
     </Container>
   );

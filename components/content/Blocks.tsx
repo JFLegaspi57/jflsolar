@@ -18,7 +18,11 @@ export function Paragraphs({ text, className = "" }: { text: string; className?:
 }
 
 /** Shows an "Awaiting confirmation" marker on unconfirmed copy (preview only). */
-export function ClaimMarker({ block }: { block: Pick<ContentBlock, "claim_status"> }) {
+export function ClaimMarker({ block, className = "" }: { block: Pick<ContentBlock, "claim_status">; className?: string }) {
   if (isProductionSite || block.claim_status === "confirmed") return null;
-  return <PendingBadge />;
+  return (
+    <span className={`block ${className}`}>
+      <PendingBadge />
+    </span>
+  );
 }

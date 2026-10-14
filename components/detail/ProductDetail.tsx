@@ -31,26 +31,7 @@ export function ProductDetail({ product, settings, mediaScope = "public" }: { pr
           ]}
         />
         <div className="mt-8 grid gap-10 lg:grid-cols-2">
-          <div className="space-y-3">
-            <div className="aspect-square overflow-hidden rounded-[var(--radius-panel)] border border-steel-200 bg-white">
-              {cover ? (
-                <MediaImage scope={mediaScope} asset={cover} sizes="(min-width: 1024px) 560px, 100vw" priority className="object-contain" />
-              ) : (
-                <PlaceholderImage label="Product photo pending" icon={productGlyph(product.category?.slug)} />
-              )}
-            </div>
-            {rest.length > 0 && (
-              <ul className="grid grid-cols-4 gap-2" aria-label="More images">
-                {rest.map((img) => (
-                  <li key={img.id} className="aspect-square overflow-hidden rounded border border-steel-200 bg-white">
-                    <MediaImage scope={mediaScope} asset={img} sizes="140px" className="object-contain" />
-                  </li>
-                ))}
-              </ul>
-            )}
-          </div>
-
-          <div>
+          <div className="lg:col-start-2 lg:row-start-1">
             <div className="flex flex-wrap items-center gap-2">
               {product.category && <span className="text-sm font-semibold tracking-wide text-steel-600 uppercase">{product.category.name}</span>}
               {product.is_sample && !isProductionSite && <SampleBadge label="Sample listing" />}
@@ -109,6 +90,25 @@ export function ProductDetail({ product, settings, mediaScope = "public" }: { pr
                 <Icon name="file" className="size-5 text-gold-800" />
                 Download datasheet (PDF{product.datasheet.bytes ? `, ${Math.max(1, Math.round(product.datasheet.bytes / 1024))} KB` : ""})
               </a>
+            )}
+          </div>
+
+          <div className="space-y-3 lg:col-start-1 lg:row-start-1">
+            <div className={`${cover ? "aspect-square" : "aspect-[16/9] sm:aspect-[4/3] lg:aspect-square"} overflow-hidden rounded-[var(--radius-panel)] border border-steel-200 bg-white`}>
+              {cover ? (
+                <MediaImage scope={mediaScope} asset={cover} sizes="(min-width: 1024px) 560px, 100vw" priority className="object-contain" />
+              ) : (
+                <PlaceholderImage label="Product photo pending" icon={productGlyph(product.category?.slug)} />
+              )}
+            </div>
+            {rest.length > 0 && (
+              <ul className="grid grid-cols-4 gap-2" aria-label="More images">
+                {rest.map((img) => (
+                  <li key={img.id} className="aspect-square overflow-hidden rounded border border-steel-200 bg-white">
+                    <MediaImage scope={mediaScope} asset={img} sizes="140px" className="object-contain" />
+                  </li>
+                ))}
+              </ul>
             )}
           </div>
         </div>

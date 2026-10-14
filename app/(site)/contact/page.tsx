@@ -8,6 +8,7 @@ import { pageMetadata } from "@/lib/seo";
 import { Container, PageHeader } from "@/components/ui/Section";
 import { Addresses, ContactRoutes } from "@/components/contact/ContactRoutes";
 import { InquiryForm } from "@/components/contact/InquiryForm";
+import { contactChannels } from "@/lib/contact";
 
 export const metadata = pageMetadata({
   title: "Contact and Request a Quote",
@@ -57,7 +58,10 @@ async function QuoteForm({ searchParams }: Pick<PageProps<"/contact">, "searchPa
     const raw = sp[k];
     return (Array.isArray(raw) ? raw[0] : raw)?.slice(0, 80) ?? "";
   };
-  const { packages, products } = await getPublicSnapshot();
+  const { packages, products, settings } = await getPublicSnapshot();
+  const quickContacts = contactChannels(settings)
+    .filter((c) => c.key === "phone" || c.key === "whatsapp" || c.key === "viber")
+    .map(({ label, detail, href, external }) => ({ label, detail, href, external }));
   const initial: InquiryValues = { ...emptyInquiry };
 
   const pkg = packages.find((p) => p.slug === pick("package"));
@@ -74,7 +78,7 @@ async function QuoteForm({ searchParams }: Pick<PageProps<"/contact">, "searchPa
           The item you selected is no longer available. You can still send us a general inquiry.
         </p>
       )}
-      <InquiryForm initialValues={initial} token={issueToken()} demo={!isInquiryDeliveryConfigured} />
+      <InquiryForm initialValues={initial} token={issueToken()} demo={!isInquiryDeliveryConfigured} quickContacts={quickContacts} />
     </>
   );
 }

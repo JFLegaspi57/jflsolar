@@ -49,7 +49,7 @@ async function PackageList({ searchParams }: Pick<PageProps<"/packages">, "searc
 
   return (
     <>
-      <Container className="py-10">
+      <Container className="pt-10 pb-24">
         <nav aria-label="Package type" className="-mx-1 flex flex-wrap gap-2">
           {filters.map((f) => (
             <Link
@@ -67,6 +67,11 @@ async function PackageList({ searchParams }: Pick<PageProps<"/packages">, "searc
         </p>
 
         <form id="compare-form" action="/packages/compare" method="get" aria-label="Compare packages" />
+        {shown.length > 1 && (
+          <div className="mt-4">
+            <CompareBar formId="compare-form" />
+          </div>
+        )}
         {shown.length ? (
           <div className="mt-6 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
             {shown.map((pkg) => (
@@ -89,7 +94,6 @@ async function PackageList({ searchParams }: Pick<PageProps<"/packages">, "searc
           written quotation.
         </p>
       </Container>
-      {shown.length > 1 && <CompareBar formId="compare-form" />}
     </>
   );
 }

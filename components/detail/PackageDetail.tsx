@@ -4,7 +4,7 @@ import { telHref } from "@/lib/site";
 import { ButtonLink } from "@/components/ui/Button";
 import { SampleBadge } from "@/components/ui/Badge";
 import { Icon } from "@/components/ui/Icon";
-import { MediaImage } from "@/components/ui/Media";
+import { MediaImage, mediaUrl } from "@/components/ui/Media";
 import { Container } from "@/components/ui/Section";
 import { Breadcrumbs } from "@/components/catalog/Breadcrumbs";
 import { PackageTypeTag } from "@/components/catalog/PackageCard";
@@ -69,7 +69,17 @@ export function PackageDetail({ pkg, settings, mediaScope = "public" }: { pkg: P
                   <div className="aspect-[16/10]">
                     <MediaImage scope={mediaScope} asset={img} sizes="(min-width: 1024px) 700px, 100vw" priority={i === 0} />
                   </div>
-                  {img.caption && <figcaption className="px-3 py-2 text-sm text-steel-600">{img.caption}</figcaption>}
+                  <figcaption className="flex flex-wrap items-center justify-between gap-x-4 gap-y-1 px-3 py-2 text-sm text-steel-600">
+                    <span>{img.caption}</span>
+                    <a
+                      href={mediaUrl(img, `${Math.max(...img.widths)}.webp`, mediaScope)}
+                      target="_blank"
+                      rel="noopener"
+                      className="inline-flex min-h-11 items-center font-semibold text-steel-900 underline"
+                    >
+                      Open full-size image<span className="sr-only"> (opens in a new tab)</span>
+                    </a>
+                  </figcaption>
                 </figure>
               ))}
             </section>

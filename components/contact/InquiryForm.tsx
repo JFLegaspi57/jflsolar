@@ -23,7 +23,24 @@ const fieldTarget: Record<keyof InquiryErrors, string> = {
   message: "f-message",
 };
 
-export function InquiryForm({ initialValues, token, demo }: { initialValues: InquiryValues; token: string; demo: boolean }) {
+export interface QuickContact {
+  label: string;
+  detail: string;
+  href: string;
+  external: boolean;
+}
+
+export function InquiryForm({
+  initialValues,
+  token,
+  demo,
+  quickContacts = [],
+}: {
+  initialValues: InquiryValues;
+  token: string;
+  demo: boolean;
+  quickContacts?: QuickContact[];
+}) {
   const [state, formAction, pending] = useActionState<InquiryState, FormData>(submitInquiry, {
     status: "idle",
     message: null,
@@ -60,6 +77,7 @@ export function InquiryForm({ initialValues, token, demo }: { initialValues: Inq
       formAction={formAction}
       pending={pending}
       demo={demo}
+      quickContacts={quickContacts}
       summaryRef={summaryRef}
       doneRef={doneRef}
     />
@@ -71,6 +89,7 @@ function FormBody({
   formAction,
   pending,
   demo,
+  quickContacts,
   summaryRef,
   doneRef,
 }: {
@@ -78,6 +97,7 @@ function FormBody({
   formAction: (fd: FormData) => void;
   pending: boolean;
   demo: boolean;
+  quickContacts: QuickContact[];
   summaryRef: React.RefObject<HTMLDivElement | null>;
   doneRef: React.RefObject<HTMLDivElement | null>;
 }) {
@@ -96,10 +116,23 @@ function FormBody({
       {demo && (
         <div id="demo-note" className="rounded-[var(--radius-control)] border-2 border-dashed border-gold-600 bg-gold-50 p-4 text-steel-900">
           <p className="font-bold">Demo form — submissions are not delivered.</p>
-          <p className="mt-1 text-sm">
-            Inquiry email has not been set up yet. You can try the form, but nothing will be sent. To reach JFL Solar now, call or message using
-            the details on this page.
-          </p>
+          <p className="mt-1 text-sm">Inquiry email has not been set up yet, so nothing typed here will be sent. To reach JFL Solar now:</p>
+          {quickContacts.length > 0 && (
+            <ul className="mt-3 flex flex-wrap gap-2">
+              {quickContacts.map((c) => (
+                <li key={c.href}>
+                  <a
+                    href={c.href}
+                    {...(c.external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+                    className="inline-flex min-h-11 items-center gap-2 rounded-[var(--radius-control)] bg-steel-900 px-4 text-sm font-semibold text-white hover:bg-steel-800"
+                  >
+                    {c.label} <span className="font-normal text-steel-200 tabular">{c.detail}</span>
+                    {c.external && <span className="sr-only">(opens in a new tab)</span>}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          )}
         </div>
       )}
 

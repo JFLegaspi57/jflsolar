@@ -216,10 +216,9 @@ export default async function HomePage() {
           <dl className="mt-10 grid gap-x-10 gap-y-8 md:grid-cols-2">
             {why.map((b) => (
               <div key={b.key} className="border-l-4 border-gold-500 pl-5">
-                <dt className="flex flex-wrap items-center gap-2 text-lg font-bold text-steel-950">
-                  {b.title} <ClaimMarker block={b} />
-                </dt>
+                <dt className="text-lg font-bold text-steel-950">{b.title}</dt>
                 <dd className="mt-1.5 text-steel-700">
+                  <ClaimMarker block={b} className="mb-1.5" />
                   <Paragraphs text={b.body} />
                 </dd>
               </div>

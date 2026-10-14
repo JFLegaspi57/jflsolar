@@ -34,7 +34,7 @@ export function PackageCard({
   return (
     <article
       aria-labelledby={headingId}
-      className={`flex flex-col rounded-[var(--radius-panel)] border bg-white p-5 sm:p-6 ${
+      className={`row-span-6 grid grid-rows-subgrid gap-y-0 rounded-[var(--radius-panel)] border bg-white p-5 sm:p-6 ${
         pkg.package_type === "installed_system" ? "border-steel-300" : "border-gold-200"
       }`}
     >

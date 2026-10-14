@@ -17,7 +17,7 @@ export function ProductCard({ product, mediaScope = "public" }: { product: Publi
   const price = priceDisplay(product);
   const image = product.images.find((m) => m.is_cover) ?? product.images[0];
   return (
-    <article className="group relative flex flex-col overflow-hidden rounded-[var(--radius-panel)] border border-steel-200 bg-white transition-shadow hover:shadow-md">
+    <article className="group relative flex w-full flex-col overflow-hidden rounded-[var(--radius-panel)] border border-steel-200 bg-white transition-shadow hover:shadow-md">
       <div className="aspect-[4/3] bg-steel-100">
         {image ? (
           <MediaImage scope={mediaScope} asset={image} sizes="(min-width: 1024px) 280px, (min-width: 640px) 45vw, 100vw" className="object-contain bg-white" />
@@ -30,12 +30,12 @@ export function ProductCard({ product, mediaScope = "public" }: { product: Publi
           {product.category?.name}
           {product.brand && <> · {product.brand}</>}
         </p>
-        <h3 className="mt-1 text-base font-bold text-steel-950">
+        <h3 className="mt-1 line-clamp-2 min-h-[2lh] text-base leading-snug font-bold text-steel-950">
           <Link href={`/products/${product.slug}`} className="after:absolute after:inset-0 hover:underline">
             {product.name}
           </Link>
         </h3>
-        {product.model && <p className="mt-0.5 font-mono text-xs text-steel-600">{product.model}</p>}
+        <p className="mt-0.5 min-h-[1lh] truncate font-mono text-xs text-steel-600">{product.model ?? ""}</p>
         <div className="mt-3 flex flex-1 flex-wrap items-end justify-between gap-2">
           <p className={`font-semibold ${price.hasAmount ? "text-steel-950 tabular" : "text-steel-700"} text-sm`}>
             {price.hasAmount ? price.headline : "Request price"}

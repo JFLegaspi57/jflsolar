@@ -88,7 +88,7 @@ async function Catalogue({ searchParams }: Pick<PageProps<"/products">, "searchP
         </div>
       </form>
 
-      <nav aria-label="Categories" className="mt-6 flex gap-2 overflow-x-auto pb-1">
+      <nav aria-label="Categories" className="mt-6 flex flex-wrap gap-2">
         <CategoryChip href="/products" label="All" active={!filters.category} />
         {categories.map((c) => (
           <CategoryChip key={c.id} href={`/products?category=${c.slug}`} label={c.name} active={filters.category === c.slug} />

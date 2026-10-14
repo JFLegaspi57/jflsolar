@@ -45,17 +45,19 @@ async function Editor({ params }: Pick<PageProps<"/admin/products/[id]">, "param
     <>
       <PageTitle title={product.name} back={{ href: "/admin/products", label: "All products" }} />
       <EditHeader previewHref={`/admin/preview/products/${product.id}`} entity="products" id={product.id} name={product.name} status={product.status} isSample={product.is_sample} publicHref={`/products/${product.slug}`} />
-      <details className="mb-8 rounded-[var(--radius-panel)] border border-steel-200 bg-white p-4">
+      <ProductForm values={productValues(product)} id={product.id} version={product.updated_at} status={product.status} categories={categories} />
+      <div className="mb-28 space-y-8">
+      <details className="rounded-[var(--radius-panel)] border border-steel-200 bg-white p-4">
         <summary className="inline-flex min-h-11 cursor-pointer items-center font-semibold text-steel-900">Preview card (as saved)</summary>
         <div className="mt-3 max-w-xs">
           <ProductCard mediaScope="admin" product={{ ...product, category: categories.find((c) => c.id === product.category_id) ?? null, images, datasheet }} />
         </div>
       </details>
-      <div className="mb-8 space-y-6">
+      <div className="space-y-6">
         <ImageManager owner={{ kind: "product", id: product.id }} images={images} title="Product images" coverLabel="main image" />
         <DatasheetManager productId={product.id} current={datasheet} />
       </div>
-      <ProductForm values={productValues(product)} id={product.id} version={product.updated_at} status={product.status} categories={categories} />
+      </div>
     </>
   );
 }
