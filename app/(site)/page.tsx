@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import { getPublicSnapshot } from "@/lib/content/public";
 import { pageMetadata } from "@/lib/seo";
@@ -10,7 +11,7 @@ import { PackageCard } from "@/components/catalog/PackageCard";
 import { ProjectCard } from "@/components/catalog/ProjectCard";
 import { ClaimMarker, Paragraphs } from "@/components/content/Blocks";
 import { Addresses, ContactRoutes } from "@/components/contact/ContactRoutes";
-import { SystemSchematic } from "@/components/home/SystemSchematic";
+import heroPhoto from "@/public/images/hero-rooftop.jpg";
 
 export const metadata = pageMetadata({
   title: brand.name,
@@ -28,19 +29,33 @@ export default async function HomePage() {
 
   return (
     <>
-      {/* Hero */}
-      <section aria-labelledby="hero-title" className="on-dark relative overflow-hidden bg-steel-950 text-white">
-        <div className="pv-grid absolute inset-0 opacity-60" aria-hidden="true" />
-        <Container className="relative grid items-center gap-10 py-16 sm:py-20 lg:grid-cols-[1.1fr_1fr] lg:py-24">
-          <div>
+      {/* Hero — owner-supplied rooftop photo (docs/reference/hero-source.png, cleaned by scripts/process-hero.mjs) */}
+      <section aria-labelledby="hero-title" className="on-dark relative isolate overflow-hidden bg-steel-950 text-white">
+        {/* Mobile/tablet: photo band above the text. Desktop: full-bleed background. */}
+        <div className="relative h-56 sm:h-80 lg:absolute lg:inset-y-0 lg:left-0 lg:-z-20 lg:h-auto lg:w-[62%]">
+          <Image
+            src={heroPhoto}
+            alt="Two technicians in hard hats and safety vests checking a rooftop solar array"
+            fill
+            priority
+            sizes="100vw"
+            placeholder="blur"
+            className="object-cover object-[35%_60%] lg:object-[40%_60%]"
+          />
+          <div aria-hidden="true" className="absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-steel-950 to-transparent lg:hidden" />
+          {/* Desktop: fade the photo into the slate text panel. */}
+          <div aria-hidden="true" className="absolute inset-0 hidden bg-gradient-to-r from-transparent from-55% to-steel-950 lg:block" />
+        </div>
+        <Container className="relative pt-4 pb-14 sm:pb-16 lg:py-28">
+          <div className="max-w-xl lg:ml-auto lg:max-w-[33rem]">
             <p className="mb-5 flex items-center gap-3 text-sm font-semibold tracking-wide text-gold-400 uppercase">
               <span className="rule-gold" aria-hidden="true" />
               {brand.tagline}
             </p>
-            <h1 id="hero-title" className="text-[2.35rem] leading-[1.08] font-extrabold sm:text-5xl lg:text-[3.6rem]">
+            <h1 id="hero-title" className="text-[2.35rem] leading-[1.08] font-extrabold sm:text-5xl lg:text-[3.15rem]">
               Solar power, properly engineered and supplied.
             </h1>
-            <p className="mt-6 max-w-xl text-lg text-steel-200">
+            <p className="mt-6 text-lg text-steel-100">
               JFL Solar designs and installs solar PV systems for homes and businesses, advises on the right system, and supplies quality
               equipment to DIY buyers and professional installers.
             </p>
@@ -53,10 +68,7 @@ export default async function HomePage() {
                 Browse equipment
               </ButtonLink>
             </div>
-            <p className="mt-6 text-sm text-steel-300">{settings.service_area}</p>
-          </div>
-          <div className="hidden md:block">
-            <SystemSchematic className="mx-auto w-full max-w-[34rem]" />
+            <p className="mt-6 text-sm font-semibold text-steel-100">{settings.service_area}</p>
           </div>
         </Container>
       </section>

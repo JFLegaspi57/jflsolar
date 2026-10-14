@@ -212,3 +212,16 @@ Revisit if the business grows to several editors working on the same records.
 - Public email `info@jflsolar.com` is shown as a **placeholder** supplied by the
   owner; it is also the intended inquiry recipient once a mailbox and Resend are
   set up. Until then the form stays in demo mode.
+
+## D14 — Home hero photo (2026-10-14, owner request)
+
+- The hero now uses the owner-supplied rooftop photo (`docs/reference/hero-source.png`,
+  from the JFL Solar banner). `scripts/process-hero.mjs` crops off the banner's
+  address/website bars, removes the overlaid headline and logo with a seamless
+  sky fill, and applies light enhancement → `public/images/hero-rooftop.jpg`.
+- Supersedes D7's "no photography until approved" for this image: the owner
+  supplied and requested it. Alt text describes the scene only; it makes no
+  claim about which project it shows.
+- Layout: mobile shows the photo as a band above the text; desktop is a split
+  with the photo on the left (technicians visible) fading into the slate text
+  panel. The line-drawn system schematic was removed.
