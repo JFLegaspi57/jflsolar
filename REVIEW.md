@@ -107,3 +107,28 @@ M1-12 and M3-1…M3-12 (live concurrency untested); M1-7 still open.
 no regressions in source review. All findings from rounds M1–M4 are now closed.
 Still unverified by anyone (no credentials): live Supabase CRUD/RLS/Storage, Google OAuth,
 real concurrency, Resend delivery. See TASKS.md "Pending live verification".
+
+---
+
+## Round UX-1 — Visual design review from screenshots (Codex, 2026-10-14)
+
+Prompted by the owner noticing uneven product cards. Earlier rounds reviewed source and
+fetched HTML only; this round Codex reviewed **rendered screenshots** (51 public captures
+at 1280/390 px + admin at ~800 px) via `codex exec -i`, as senior UX/UI designer.
+Captured with `scripts/qa/ux-shots.mjs`. **Round 1 verdict: FAIL** (4 MAJOR, 8 MINOR).
+**Round 2 (new screenshots after fixes): PASS** — 11/12 verified.
+
+- [x] MAJOR — Sticky compare bar covered package cards → controls in page flow; sticky bar only after a selection.
+- [x] MAJOR — Contact demo form buried working call/message routes on mobile → Call/WhatsApp/Viber buttons inside the demo notice.
+- [x] MAJOR — Admin nav clipped behind horizontal scroll at ~800 px → wraps.
+- [x] MAJOR — Mobile comparison relied on 1/2/3 numbering → values labelled with package names, "Ask" actions at top, combined capacity row.
+- [x] MINOR — Product cards uneven (owner-reported widths + internal rhythm) → full width, reserved title/model lines.
+- [x] MINOR — Mobile category chips hidden off-screen → wrap.
+- [x] MINOR — Product detail mobile: placeholder before title → title/actions first, shorter placeholder.
+- [x] MINOR — Package editor: image tools before Basics → form first, live notice under status.
+- [x] MINOR — Package cards misaligned across a row → CSS subgrid rows.
+- [x] MINOR — Mission/vision heavy bold blocks → regular reading text.
+- [x] MINOR — Confirmation pills crowding headings → below headings.
+- [~] MINOR — Portrait flyer in a wide 16:10 frame is hard to read → "Open full-size image" link added. Kept the 16:10 framing because the owner asked for a 16:10 copy of the flyer; structured specs remain the primary content.
+- [x] Round 2 MINOR — Battery wording differed between card ("After assessment") and comparison ("Not included") → shared rule.
+- [x] Round 2 MINOR — Mobile combined capacity lacked labels → "Inverter … · Solar array … · Battery …".

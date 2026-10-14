@@ -44,9 +44,9 @@ function rows(): { label: string; render: (p: PublicPackage) => ReactNode }[] {
     { label: "Offer type", render: (p) => <strong>{packageTypeLabel[p.package_type]}</strong> },
     { label: "Installation", render: (p) => (p.package_type === "installed_system" ? p.installation_terms || "Included" : p.installation_terms || "Not included") },
     { label: "System type", render: (p) => (p.system_type ? systemTypeLabel[p.system_type] : "—") },
-    { label: "Inverter (kW)", render: (p) => formatCapacity(p.inverter_kw, "kW") ?? "—" },
-    { label: "Solar array (kWp)", render: (p) => formatCapacity(p.array_kwp, "kWp") ?? "—" },
-    { label: "Battery (kWh)", render: (p) => formatCapacity(p.battery_kwh, "kWh") ?? "Not included" },
+    { label: "Inverter (kW)", render: (p) => capacity(p, "inverter") },
+    { label: "Solar array (kWp)", render: (p) => capacity(p, "array") },
+    { label: "Battery (kWh)", render: (p) => capacity(p, "battery") },
     {
       label: "Price",
       render: (p) => {
@@ -72,16 +72,23 @@ function rows(): { label: string; render: (p: PublicPackage) => ReactNode }[] {
   ];
 }
 
+/**
+ * Same wording as the package cards (SpecRow): all three empty = sized after a
+ * site assessment; otherwise an empty value means "Not included".
+ */
+function capacity(p: PublicPackage, which: "inverter" | "array" | "battery") {
+  const values = { inverter: formatCapacity(p.inverter_kw, "kW"), array: formatCapacity(p.array_kwp, "kWp"), battery: formatCapacity(p.battery_kwh, "kWh") };
+  const allEmpty = !values.inverter && !values.array && !values.battery;
+  return values[which] ?? (allEmpty ? "after assessment" : "not included");
+}
+
 /** Mobile: one combined capacity row instead of three. */
 function mobileRows(table: ReturnType<typeof rows>) {
-  const capacity = new Set(["Inverter (kW)", "Solar array (kWp)", "Battery (kWh)"]);
-  const out = table.filter((r) => !capacity.has(r.label));
+  const capacityRows = new Set(["Inverter (kW)", "Solar array (kWp)", "Battery (kWh)"]);
+  const out = table.filter((r) => !capacityRows.has(r.label));
   out.splice(out.findIndex((r) => r.label === "System type") + 1, 0, {
     label: "Capacity",
-    render: (p) =>
-      [formatCapacity(p.inverter_kw, "kW"), formatCapacity(p.array_kwp, "kWp"), formatCapacity(p.battery_kwh, "kWh") ?? "no battery"]
-        .map((v) => v ?? "after assessment")
-        .join(" · "),
+    render: (p) => `Inverter ${capacity(p, "inverter")} · Solar array ${capacity(p, "array")} · Battery ${capacity(p, "battery")}`,
   });
   return out;
 }
