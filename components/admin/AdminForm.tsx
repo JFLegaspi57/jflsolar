@@ -2,6 +2,7 @@
 
 import { createContext, use, useActionState, useEffect, useRef, useState, type ReactNode } from "react";
 import { initialFormState, type AdminFormState } from "@/lib/admin/form";
+import { useUnsavedGuard } from "./useUnsavedGuard";
 
 type Action = (prev: AdminFormState, fd: FormData) => Promise<AdminFormState>;
 
@@ -51,38 +52,7 @@ export function AdminForm({
 
   const formRef = useRef<HTMLFormElement>(null);
 
-  // Unsaved-changes protection: page unload, in-app links and other forms
-  // (e.g. Publish/Archive buttons, image actions) all ask before discarding edits.
-  useEffect(() => {
-    if (!dirty) return;
-    const message = "You have unsaved changes on this page. Leave without saving them?";
-    const warn = (e: BeforeUnloadEvent) => e.preventDefault();
-    const onClick = (e: MouseEvent) => {
-      const a = (e.target as Element | null)?.closest?.("a[href]") as HTMLAnchorElement | null;
-      if (!a || a.target === "_blank" || e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
-      const url = new URL(a.href, location.href);
-      if (url.origin !== location.origin || (url.pathname === location.pathname && url.hash)) return;
-      if (!window.confirm(message)) {
-        e.preventDefault();
-        e.stopPropagation();
-      }
-    };
-    const onSubmit = (e: SubmitEvent) => {
-      if (e.target === formRef.current) return;
-      if (!window.confirm(message)) {
-        e.preventDefault();
-        e.stopPropagation();
-      }
-    };
-    window.addEventListener("beforeunload", warn);
-    document.addEventListener("click", onClick, true);
-    document.addEventListener("submit", onSubmit, true);
-    return () => {
-      window.removeEventListener("beforeunload", warn);
-      document.removeEventListener("click", onClick, true);
-      document.removeEventListener("submit", onSubmit, true);
-    };
-  }, [dirty]);
+  useUnsavedGuard(dirty, formRef);
 
   useEffect(() => {
     if (state.attempt === 0) return;
