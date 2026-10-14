@@ -15,11 +15,17 @@ Verified 2026-10-14 by Claude in the browser, signed in as an owner:
 - [x] Google OAuth sign-in; non-staff Google account (before being granted) → access denied; signed-out /admin → login; /admin/media without session → 401
 - [x] Package: validation error keeps values + focuses summary; create draft (public 404); upload photo (WebP variants); draft photo private on /media, admin route without session and direct Supabase URL; publish → public page, listing and photo live; edit while live (notice shown) → public updated; stale save rejected with values kept; reorder; unpublish → page + photo 404; archive; delete only when archived, confirm dialog (Escape cancels, focus returns); delete removed row, media rows and storage files
 
+Verified 2026-10-14 on Vercel (https://jflsolar.vercel.app, SITE_ENV unset = preview):
+- [x] Public: 39/39 journeys, axe 0 violations (14 routes × 375/1280 px), no 320 px overflow, real 404s, noindex header/meta, robots disallow-all, security headers, canonical/OG use the Vercel URL
+- [x] Google sign-in on the deployed domain (after adding it to Supabase Site URL + Redirect URLs)
+- [x] Package: create draft, upload 2 photos (first auto-cover), make cover, reorder, replace file (old files deleted, alt/order/cover kept), edit alt text, delete photo (confirm dialog), publish (page + listing + photo live), unpublish (page 404 at once; uncached photo 404; CDN-cached photo served until its 5-min TTL — measured: gone at 11:39:09 UTC, ~5 min after caching), archive, delete (rows + files removed)
+- [x] Product: create + publish, fake PDF rejected, real datasheet uploaded and downloadable from the public product page, archive + delete
+- [x] Settings save (unchanged values)
+
 Still pending:
-- [ ] Image replace, cover change, image reorder/delete, datasheet upload (RPC logic tested on PGlite only)
-- [ ] Products, projects, categories, content blocks, settings and staff pages against the live project (same code paths as packages)
+- [ ] Projects, categories, content blocks and staff pages against the live project (same code paths as packages/products)
 - [ ] Concurrency under real parallel load (rate limit, last-owner lock)
-- [ ] Resend live delivery (needs mailbox + Resend account); Vercel deployment; launch:check with production config
+- [ ] Resend live delivery (needs mailbox + Resend account); launch:check with production config (at handover)
 
 ## Missing owner content / confirmations
 
