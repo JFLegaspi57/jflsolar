@@ -60,7 +60,7 @@ Codex reviewed source and fetched rendered pages from the running dev server
 - [x] **M2-7 MINOR — Expired-token recovery immediately hit the 3 s minimum.** Fix: the refreshed token is back-dated by the minimum fill time.
 - [x] **M2-8 MINOR — Mobile comparison lacked sample labels.** Fix: "(sample)" beside each sample package name in the mobile legend.
 - [x] **M2-9 MINOR — Privacy notice overstated 24 h deletion.** Fix: wording now says fingerprints are only used for 24 h and older ones are deleted the next time the form is used.
-- [x] **M2-10 MINOR — `npm run check`, `launch:check` and `.env.example` missing.** Fix: added (see package.json, `.env.example`, `scripts/launch-check.ts`).
+- [x] **M2-10 MINOR — `npm run check`, `launch:check` and `.env.example` missing.** Fix: added (see package.json, `.env.example`, `scripts/launch-check.mts`).
 
 **M1 recheck by Codex:** verified M1-1, M1-5, M1-8, M1-9, M1-10. Still open at that time: M1-2, M1-3, M1-4, M1-11, M1-12 (addressed by M2-1…M2-4, M2-7, M2-10 above), M1-6 and M1-7 (admin — milestone 3).
 

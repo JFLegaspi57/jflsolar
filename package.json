@@ -12,8 +12,8 @@
     "check": "npm run lint && npm run typecheck && npm run test",
     "db:seed:generate": "tsx scripts/generate-seed.ts",
     "brand:assets": "node scripts/build-brand-assets.mjs",
-    "admin:grant": "tsx scripts/admin-grant.ts",
-    "launch:check": "tsx scripts/launch-check.ts",
+    "admin:grant": "tsx scripts/admin-grant.mts",
+    "launch:check": "tsx scripts/launch-check.mts",
     "qa:browser": "node scripts/qa/browser.mjs"
   },
   "dependencies": {

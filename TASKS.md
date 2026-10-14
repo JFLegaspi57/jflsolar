@@ -7,16 +7,19 @@ not deployed; live Supabase / Google / Resend checks pending credentials.
 
 - [x] M4 Final readiness — Codex review PASS after fixes (REVIEW.md)
 
-## Pending live verification (needs owner credentials — technical blockers)
+## Live verification (Supabase project dwomkopfkhicqhebwrjn, local dev server)
 
-- [ ] Owner creates the prototype Supabase project (docs/SETUP.md "Prototype setup") and puts keys in .env.local; then Claude verifies: migrations + seed; verify admin create / edit / publish / unpublish / archive / delete, ordering, featured, optimistic-concurrency conflict, draft preview
-- [ ] Image upload, replace, cover, reorder, delete; datasheet upload; draft media private (`/media` 404) and public after publish
-- [ ] Google OAuth: sign-in, sign-out, expired session, non-staff Google account → access denied, deactivated staff refused
-- [ ] Storage RLS and anonymous column grants against real PostgREST (tested on PGlite only)
-- [ ] Concurrent rate-limit admission and last-owner lock under real concurrency (PGlite is single-connection)
-- [ ] Resend: domain verified, real test inquiry delivered, reply-to works, rate limiter with secret key
-- [ ] Vercel deployment (Preview + Production envs), then `jflsolar.com` DNS — owner authorisation required
-- [ ] `npm run launch:check` against production configuration
+Verified 2026-10-14 by Claude in the browser, signed in as an owner:
+- [x] Migrations + seed applied; private `media` bucket; integrity functions present
+- [x] Anonymous API on real PostgREST: no admin_notes, no staff list, no writes, no rate-limit RPC
+- [x] Google OAuth sign-in; non-staff Google account (before being granted) → access denied; signed-out /admin → login; /admin/media without session → 401
+- [x] Package: validation error keeps values + focuses summary; create draft (public 404); upload photo (WebP variants); draft photo private on /media, admin route without session and direct Supabase URL; publish → public page, listing and photo live; edit while live (notice shown) → public updated; stale save rejected with values kept; reorder; unpublish → page + photo 404; archive; delete only when archived, confirm dialog (Escape cancels, focus returns); delete removed row, media rows and storage files
+
+Still pending:
+- [ ] Image replace, cover change, image reorder/delete, datasheet upload (RPC logic tested on PGlite only)
+- [ ] Products, projects, categories, content blocks, settings and staff pages against the live project (same code paths as packages)
+- [ ] Concurrency under real parallel load (rate limit, last-owner lock)
+- [ ] Resend live delivery (needs mailbox + Resend account); Vercel deployment; launch:check with production config
 
 ## Missing owner content / confirmations
 
