@@ -12,7 +12,7 @@ export default function NewPackage() {
       <PageTitle
         title="New package"
         back={{ href: "/admin/packages", label: "All packages" }}
-        intro="New packages are saved as drafts. Add images after the first save, then publish."
+        intro="“Save as draft” keeps it hidden while you work; “Save and publish” puts it on the website straight away. You can add images after the first save."
       />
       <Suspense fallback={<p role="status">Loading…</p>}>
         <Guarded />

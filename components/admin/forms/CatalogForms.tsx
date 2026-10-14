@@ -38,9 +38,12 @@ export function ProductForm({ values, id, version, status, categories }: Common 
       </Fieldset>
       <Fieldset legend="Price and availability">
         <SelectField name="pricing_mode" label="Pricing mode" required options={pricingOptions} />
-        <TextField name="price_php" label="Price (₱)" inputMode="decimal" />
-        <TextField name="price_basis" label="Price basis" maxLength={200} className="sm:col-span-2" hint="e.g. “Per piece, pickup price”." />
-        <CheckboxField name="price_is_sample" label="This is a sample price" />
+        <TextField name="price_php" label="Price (₱)" inputMode="decimal" hint="Numbers only, e.g. 18500." className="needs-price" />
+        <p className="quote-note self-center text-sm text-steel-700">No price will be shown. Customers see “Request price”.</p>
+        <TextField name="price_basis" label="Price basis" maxLength={200} className="needs-price sm:col-span-2" hint="e.g. “Per piece, pickup price”." />
+        <div className="needs-price">
+          <CheckboxField name="price_is_sample" label="This is a sample price" />
+        </div>
         <SelectField
           name="availability"
           label="Availability"

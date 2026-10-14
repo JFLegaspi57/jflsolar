@@ -3,7 +3,7 @@
 import { redirect } from "next/navigation";
 import { updateTag } from "next/cache";
 import { requireStaffAction } from "@/lib/admin/auth";
-import { FormParser, dbErrorMessage, type AdminFormState } from "@/lib/admin/form";
+import { FormParser, dbErrorMessage, slugify, type AdminFormState } from "@/lib/admin/form";
 import { CONTENT_TAG } from "@/lib/content/public";
 import { failure, invalid, saved } from "./shared";
 
@@ -17,12 +17,15 @@ export async function saveBlock(prev: AdminFormState, fd: FormData): Promise<Adm
 
   const originalKey = String(fd.get("original_key") ?? "");
   const version = String(fd.get("version") ?? "");
-  const key = p.text("key", "Key", { required: true, max: 60 });
+  const section = p.choice("section", "Section", SECTIONS, { required: true });
+  const title = p.text("title", "Title", { required: true, max: 160 });
+  // Existing blocks keep their key (it decides placement); new blocks get one from the title if blank.
+  const key = originalKey || p.text("key", "Key", { max: 60 }) || (section && title ? `${section}.${slugify(title).replace(/-/g, "_").slice(0, 40)}` : null);
   if (key && !KEY_RE.test(key)) p.errors.key = "Use lowercase letters and numbers, separated by dots or hyphens (e.g. about.team).";
   const row = {
     key,
-    section: p.choice("section", "Section", SECTIONS, { required: true }),
-    title: p.text("title", "Title", { required: true, max: 160 }),
+    section,
+    title,
     subtitle: p.text("subtitle", "Subtitle", { max: 200 }),
     body: p.body("body", "Text", 6000),
     claim_status: p.bool("confirmed") ? "confirmed" : "needs_confirmation",

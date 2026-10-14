@@ -50,7 +50,9 @@ async function Editor({ params }: Pick<PageProps<"/admin/projects/[id]">, "param
       <ProjectForm values={projectValues(project)} id={project.id} version={project.updated_at} status={project.status} />
       <div className="mb-28 space-y-8">
       <details className="rounded-[var(--radius-panel)] border border-steel-200 bg-white p-4">
-        <summary className="inline-flex min-h-11 cursor-pointer items-center font-semibold text-steel-900">Preview card (as saved)</summary>
+        <summary className="inline-flex min-h-11 cursor-pointer items-center gap-2 font-semibold text-steel-900">
+          <span aria-hidden="true">▸</span> Show saved card preview
+        </summary>
         <div className="mt-3 max-w-sm">
           <ProjectCard mediaScope="admin" project={{ ...project, photos, cover: photos.find((p) => p.is_cover) ?? photos[0] ?? null }} />
         </div>

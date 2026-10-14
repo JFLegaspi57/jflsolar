@@ -51,7 +51,9 @@ async function Editor({ params }: Pick<PageProps<"/admin/packages/[id]">, "param
       <PackageForm values={packageValues(pkg)} id={pkg.id} version={pkg.updated_at} status={pkg.status} />
       <div className="mb-28 space-y-8">
       <details className="rounded-[var(--radius-panel)] border border-steel-200 bg-white p-4">
-        <summary className="inline-flex min-h-11 cursor-pointer items-center font-semibold text-steel-900">Preview card (as saved)</summary>
+        <summary className="inline-flex min-h-11 cursor-pointer items-center gap-2 font-semibold text-steel-900">
+          <span aria-hidden="true">▸</span> Show saved card preview
+        </summary>
         <div className="mt-3 max-w-sm">
           <PackageCard pkg={{ ...pkg, promo_state: promo, images }} />
         </div>

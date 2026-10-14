@@ -2,6 +2,7 @@ import { Suspense } from "react";
 import { notFound } from "next/navigation";
 import { requireStaffPage } from "@/lib/admin/auth";
 import { blockValues } from "@/lib/admin/values";
+import { isStandardBlock, placementLabel } from "@/lib/admin/blocks";
 import type { ContentBlock, MediaAsset } from "@/lib/types";
 import { deleteBlock } from "@/app/admin/actions/site";
 import { ConfirmSubmit } from "@/components/admin/ConfirmSubmit";
@@ -42,23 +43,33 @@ async function Editor({ params }: Pick<PageProps<"/admin/content/[key]">, "param
           <strong>Needs confirmation:</strong> {block.review_note}
         </p>
       )}
-      <div className="mb-8">
+      <BlockForm values={blockValues(block)} version={block.updated_at} isNew={false} placement={placementLabel(block.key, block.section)} />
+      <div className="mb-28 space-y-8">
         <ImageManager
           owner={{ kind: "block", key: block.key }}
           images={(media ?? []) as MediaAsset[]}
           title={block.key === "about.founder" ? "Founder photo" : "Image (optional)"}
+          guidance={block.key === "about.founder" ? "Use a recent portrait the founder has approved for publication." : "Optional image shown with this block. Only use images you have permission to publish."}
         />
+        <section aria-labelledby="danger-title" className="rounded-[var(--radius-panel)] border border-[#f3c3be] bg-white p-5">
+          <h2 id="danger-title" className="text-lg font-bold text-danger-700">
+            Delete this block
+          </h2>
+          <p className="mt-1 text-sm text-steel-700">
+            Permanently removes the text and any image. To hide it for now, untick “Show on the website” above instead.
+            {isStandardBlock(block.key) && " This is a standard block: deleting it removes that part of the page."}
+          </p>
+          <div className="mt-3">
+            <ConfirmSubmit
+              action={deleteBlock.bind(null, block.key)}
+              label="Delete block"
+              title={`Delete “${block.title}”?`}
+              body={<p>The text and any images in this block are permanently removed. This cannot be undone.</p>}
+              confirmLabel="Delete block"
+            />
+          </div>
+        </section>
       </div>
-      <div className="mb-8 flex justify-end">
-        <ConfirmSubmit
-          action={deleteBlock.bind(null, block.key)}
-          label="Delete this block"
-          title={`Delete “${block.title}”?`}
-          body={<p>The text and any images in this block are permanently removed. To hide it temporarily, untick “Show on the website” instead.</p>}
-          confirmLabel="Delete block"
-        />
-      </div>
-      <BlockForm values={blockValues(block)} version={block.updated_at} isNew={false} />
     </>
   );
 }

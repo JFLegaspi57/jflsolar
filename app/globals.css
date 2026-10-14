@@ -147,3 +147,14 @@ dialog.sheet {
 html:has([data-admin-form]) {
   scroll-padding-bottom: 9rem;
 }
+
+/* Admin pricing: hide price inputs while "request a quotation" is selected (no JS needed). */
+.quote-note {
+  display: none;
+}
+form:has(select[name="pricing_mode"] option[value="quote"]:checked) .needs-price {
+  display: none;
+}
+form:has(select[name="pricing_mode"] option[value="quote"]:checked) .quote-note {
+  display: block;
+}

@@ -6,35 +6,64 @@ import { initialFormState } from "@/lib/admin/form";
 import { AdminForm } from "../AdminForm";
 import { CheckboxField, Fieldset, SelectField, TextArea, TextField } from "../Fields";
 
-export function BlockForm({ values, version, isNew }: { values: Record<string, string>; version?: string; isNew: boolean }) {
+export function BlockForm({ values, version, isNew, placement }: { values: Record<string, string>; version?: string; isNew: boolean; placement?: string }) {
   return (
     <AdminForm action={saveBlock} initialValues={values} hidden={{ version: version ?? "", original_key: values.original_key ?? "" }} isNew={isNew} publishable={false} labels={{ save: isNew ? "Create block" : "Save" }}>
+      {placement && (
+        <p className="text-sm text-steel-700">
+          <span className="font-semibold text-steel-950">Where this appears:</span> {placement}
+        </p>
+      )}
       <Fieldset legend="Content">
         <TextField name="title" label="Title / heading" required maxLength={160} className="sm:col-span-2" />
-        <TextField name="subtitle" label="Subtitle" maxLength={200} hint="Optional (e.g. a founder's role, or a short label)." className="sm:col-span-2" />
-        <TextArea name="body" label="Text" maxLength={6000} rows={8} className="sm:col-span-2" hint="Plain text. Separate paragraphs with a blank line." />
+        <TextField name="subtitle" label="Subtitle" maxLength={200} hint="Optional — e.g. a person’s role, or a short label above the heading." className="sm:col-span-2" />
+        <TextArea name="body" label="Text" maxLength={6000} rows={8} className="sm:col-span-2" hint="Plain text. Leave a blank line between paragraphs." />
       </Fieldset>
-      <Fieldset legend="Accuracy and visibility" description="Copy marked as awaiting confirmation is shown only on the preview site (with a marker) and is hidden on the production site.">
-        <CheckboxField name="confirmed" label="The owner has confirmed this text is accurate" hint="Tick only after the facts and promises in this text have been approved (founding date, credentials, warranty and support promises)." />
-        <CheckboxField name="published" label="Show on the website" />
+      <Fieldset legend="Accuracy and visibility">
+        <CheckboxField
+          name="confirmed"
+          label="The owner has confirmed this text is accurate"
+          hint="Tick only after the facts and promises in this text are approved (founding date, credentials, warranty and support promises). Until then it shows on the preview site only, with an “Awaiting confirmation” marker, and never on the live site."
+        />
+        <CheckboxField name="published" label="Show on the website" hint="Untick to hide this block everywhere. Unconfirmed text still only appears on the preview site." />
         <TextArea name="review_note" label="Review note (staff only)" maxLength={1000} rows={3} className="sm:col-span-2" hint="What needs checking, and who approved it." />
       </Fieldset>
-      <Fieldset legend="Placement">
-        <SelectField
-          name="section"
-          label="Section"
-          required
-          options={[
-            { value: "about", label: "About page" },
-            { value: "why", label: "Why choose us (home + About)" },
-            { value: "home", label: "Home (reserved)" },
-            { value: "services", label: "Services (reserved)" },
-            { value: "legal", label: "Legal (reserved)" },
-          ]}
-        />
-        <TextField name="sort_order" label="Order" inputMode="numeric" hint="Lower numbers appear first." />
-        <TextField name="key" label="Block key" required maxLength={60} hint="Internal identifier, e.g. about.team. Standard keys (about.intro, about.mission, about.founder…) place the block in a fixed spot on the About page." className="sm:col-span-2" />
-      </Fieldset>
+      {isNew ? (
+        <Fieldset legend="Placement" description="New blocks appear after the standard ones in the chosen section.">
+          <SelectField
+            name="section"
+            label="Show in"
+            required
+            options={[
+              { value: "about", label: "About page" },
+              { value: "why", label: "Why choose us (home page and About page)" },
+            ]}
+          />
+          <TextField name="sort_order" label="Order" inputMode="numeric" hint="Lower numbers appear first." />
+        </Fieldset>
+      ) : (
+        <>
+          <input type="hidden" name="section" value={values.section} />
+          <input type="hidden" name="key" value={values.key} />
+        </>
+      )}
+      <details className="rounded-[var(--radius-panel)] border border-steel-200 bg-white p-4">
+        <summary className="inline-flex min-h-11 cursor-pointer items-center gap-2 font-semibold text-steel-900">
+          <span aria-hidden="true">▸</span> Advanced (developer settings)
+        </summary>
+        <div className="mt-4 grid gap-5 sm:grid-cols-2">
+          {isNew ? (
+            <TextField name="key" label="Block key" maxLength={60} hint="Optional. Leave blank to create one automatically." className="sm:col-span-2" />
+          ) : (
+            <>
+              <p className="text-sm text-steel-700 sm:col-span-2">
+                Internal key: <code>{values.key}</code> (fixed — it decides where the block appears).
+              </p>
+              <TextField name="sort_order" label="Order" inputMode="numeric" hint="Lower numbers appear first within the section." />
+            </>
+          )}
+        </div>
+      </details>
     </AdminForm>
   );
 }

@@ -86,19 +86,41 @@ function Result({ state }: { state: AdminFormState }) {
   );
 }
 
-export function ImageManager({ owner, images, title = "Images", coverLabel = "cover" }: { owner: MediaOwner; images: MediaAsset[]; title?: string; coverLabel?: string }) {
+const DEFAULT_GUIDANCE: Record<MediaOwner["kind"], string> = {
+  package: "Use equipment or system photos you have permission to publish.",
+  product: "Use clear product photos — ideally the manufacturer’s official images or your own photos.",
+  project: "Use only real JFL Solar project photos that you have permission to publish. Never use stock photos or other companies’ work.",
+  block: "Only use images you have permission to publish.",
+};
+
+export function ImageManager({
+  owner,
+  images,
+  title = "Images",
+  coverLabel = "cover",
+  guidance,
+}: {
+  owner: MediaOwner;
+  images: MediaAsset[];
+  title?: string;
+  coverLabel?: string;
+  guidance?: string;
+}) {
   const [state, action, pending] = useActionState(uploadImage.bind(null, owner), initialFormState);
   const [preview, setPreview] = useState<string | null>(null);
   const v = state.status === "error" ? state.values ?? {} : {};
 
   return (
     <section aria-labelledby="images-title" className="rounded-[var(--radius-panel)] border border-steel-200 bg-white p-5 sm:p-6">
-      <h2 id="images-title" className="text-lg font-bold text-steel-950">
-        {title}
-      </h2>
+      <div className="flex flex-wrap items-baseline justify-between gap-2">
+        <h2 id="images-title" className="text-lg font-bold text-steel-950">
+          {title}
+        </h2>
+        <p className="rounded-full bg-steel-100 px-2.5 py-0.5 text-xs font-semibold text-steel-700">Saved separately — changes here apply immediately</p>
+      </div>
       <p className="mt-1 text-sm text-steel-600">
-        JPEG, PNG, WebP or AVIF. Large photos are reduced automatically. Only use photos you have permission to publish; never present stock or
-        sample images as JFL Solar projects. Images become public only when this item is published.
+        {guidance ?? DEFAULT_GUIDANCE[owner.kind]} JPEG, PNG, WebP or AVIF; large photos are reduced automatically. Images become public only when
+        this item is published.
       </p>
 
       {images.length > 0 && (
@@ -210,7 +232,7 @@ function ImageRow({ img, first, last, coverLabel, showCover }: { img: MediaAsset
           </div>
           <div className="flex flex-wrap items-center gap-2 sm:col-span-2">
             <button type="submit" disabled={textPending} className={btn}>
-              Save text
+              Save image details
             </button>
             <Result state={textState} />
           </div>

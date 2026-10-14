@@ -40,9 +40,9 @@ export function PackageForm({ values, id, version, status }: { values: Record<st
       </Fieldset>
 
       <Fieldset legend="Capacity" description="Leave blank if it will be set after a site assessment.">
-        <TextField name="inverter_kw" label="Inverter capacity (kW)" inputMode="decimal" />
-        <TextField name="array_kwp" label="Solar array (kWp)" inputMode="decimal" />
-        <TextField name="battery_kwh" label="Battery (kWh)" inputMode="decimal" hint="Leave blank if no battery." />
+        <TextField name="inverter_kw" label="Inverter capacity (kW)" inputMode="decimal" hint="How much power the inverter can deliver at once, e.g. 6." />
+        <TextField name="array_kwp" label="Solar array (kWp)" inputMode="decimal" hint="Total panel capacity: number of panels × panel watts ÷ 1000, e.g. 10 × 620 W = 6.2." />
+        <TextField name="battery_kwh" label="Battery (kWh)" inputMode="decimal" hint="How much energy the battery stores, e.g. 16.5. Leave blank if no battery." />
         <TextArea
           name="components"
           label="Components"
@@ -66,9 +66,12 @@ export function PackageForm({ values, id, version, status }: { values: Record<st
             { value: "starting", label: "Starting price (“From ₱…”)" },
           ]}
         />
-        <TextField name="price_php" label="Price (₱)" inputMode="decimal" hint="Numbers only, e.g. 205000. Ignored for quotations." />
-        <TextField name="price_basis" label="Price basis" maxLength={200} hint="e.g. “Pickup price, equipment only” or “Installed price, Metro Manila”." className="sm:col-span-2" />
-        <CheckboxField name="price_is_sample" label="This is a sample price" hint="Shows “Sample price — not a confirmed offer”. Untick only for an approved price." />
+        <TextField name="price_php" label="Price (₱)" inputMode="decimal" hint="Numbers only, e.g. 205000." className="needs-price" />
+        <p className="quote-note self-center text-sm text-steel-700">No price will be shown. Customers see “Price to be confirmed” and are asked to request a quotation.</p>
+        <TextField name="price_basis" label="Price basis" maxLength={200} hint="e.g. “Pickup price, equipment only” or “Installed price, Metro Manila”." className="needs-price sm:col-span-2" />
+        <div className="needs-price">
+          <CheckboxField name="price_is_sample" label="This is a sample price" hint="Shows “Sample price — not a confirmed offer”. Untick only for an approved price." />
+        </div>
       </Fieldset>
 
       <Fieldset legend="Promotion" description="Optional. Dates are inclusive, Philippine time. After the end date the promotional price is withdrawn automatically.">

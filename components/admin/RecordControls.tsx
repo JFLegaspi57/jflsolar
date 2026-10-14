@@ -41,8 +41,15 @@ export function MoveButtons({ entity, id, name, first, last }: { entity: Entity;
 export function FeaturedToggle({ entity, id, name, featured }: { entity: Entity; id: string; name: string; featured: boolean }) {
   return (
     <form action={toggleFeatured.bind(null, entity, id, !featured)}>
-      <button type="submit" className={`${small} w-11 px-0 text-lg ${featured ? "border-gold-500 bg-gold-50" : ""}`} aria-pressed={featured} aria-label={`Featured: ${name}`}>
+      <button
+        type="submit"
+        className={`${small} gap-1.5 ${featured ? "border-gold-500 bg-gold-500 text-steel-950 hover:bg-gold-400" : ""}`}
+        aria-pressed={featured}
+        title={featured ? "Shown on the home page — click to remove" : "Click to show on the home page"}
+      >
         <span aria-hidden="true">{featured ? "★" : "☆"}</span>
+        {featured ? "Featured" : "Feature"}
+        <span className="sr-only"> {name}</span>
       </button>
     </form>
   );
@@ -62,18 +69,34 @@ export function StatusControls({ entity, id, name, status, returnTo = "list" }: 
         </form>
       )}
       {status === "published" && (
-        <form action={go("draft")}>
-          <button type="submit" className={small}>
-            Unpublish{label}
-          </button>
-        </form>
+        <ConfirmSubmit
+          tone="caution"
+          action={go("draft")}
+          label={<>Unpublish{label}</>}
+          title={`Unpublish “${name}”?`}
+          body={
+            <p>
+              It disappears from the public website straight away and becomes a draft you can keep editing. Publish it again at any time. (Photos
+              already viewed may stay cached for up to 5 minutes.)
+            </p>
+          }
+          confirmLabel="Unpublish"
+        />
       )}
       {status !== "archived" ? (
-        <form action={go("archived")}>
-          <button type="submit" className={small}>
-            Archive{label}
-          </button>
-        </form>
+        <ConfirmSubmit
+          tone="caution"
+          action={go("archived")}
+          label={<>Archive{label}</>}
+          title={`Archive “${name}”?`}
+          body={
+            <p>
+              Use this for items you no longer offer. It is hidden from the website and moved to the <strong>Archived</strong> tab, where you can
+              restore it as a draft or delete it permanently.
+            </p>
+          }
+          confirmLabel="Archive"
+        />
       ) : (
         <>
           <form action={go("draft")}>

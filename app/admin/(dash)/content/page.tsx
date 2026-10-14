@@ -2,6 +2,7 @@ import Link from "next/link";
 import { Suspense } from "react";
 import { requireStaffPage } from "@/lib/admin/auth";
 import type { ContentBlock } from "@/lib/types";
+import { placementLabel, visibilityLabel } from "@/lib/admin/blocks";
 import { Notice } from "@/components/admin/Notice";
 import { NewButton, PageTitle } from "@/components/admin/PageTitle";
 
@@ -49,15 +50,13 @@ async function List() {
                     <Link href={`/admin/content/${encodeURIComponent(b.key)}`} className="font-bold text-steel-950 underline-offset-2 hover:underline">
                       {b.title}
                     </Link>
-                    <p className="text-sm text-steel-600">
-                      <code>{b.key}</code> · {b.published ? "Shown" : "Hidden"}
-                    </p>
+                    <p className="text-sm text-steel-600">{placementLabel(b.key, b.section)}</p>
                   </div>
-                  {b.claim_status === "confirmed" ? (
-                    <span className="rounded-full bg-ok-50 px-2.5 py-0.5 text-xs font-bold text-ok-700">Confirmed</span>
-                  ) : (
-                    <span className="rounded-full bg-warn-50 px-2.5 py-0.5 text-xs font-bold text-warn-800">Awaiting confirmation</span>
-                  )}
+                  {(() => {
+                    const v = visibilityLabel(b.published, b.claim_status);
+                    const cls = v.tone === "shown" ? "bg-ok-50 text-ok-700" : v.tone === "pending" ? "bg-warn-50 text-warn-800" : "bg-steel-100 text-steel-700";
+                    return <span className={`rounded-full px-2.5 py-0.5 text-xs font-bold ${cls}`}>{v.text}</span>;
+                  })()}
                 </li>
               ))}
           </ul>

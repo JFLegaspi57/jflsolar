@@ -60,7 +60,8 @@ export class FormParser {
   slug(name: string, fallbackFrom: string | null): string | null {
     const v = this.raw(name) || (fallbackFrom ? slugify(fallbackFrom) : "");
     if (!v) {
-      this.errors[name] = "URL slug is required.";
+      // Nothing to derive it from: the missing name is reported instead.
+      if (fallbackFrom) this.errors[name] = "Could not create a web address from the name. Enter one, e.g. hybrid-6kw-system.";
       return null;
     }
     if (!SLUG_RE.test(v) || v.length > 80) {

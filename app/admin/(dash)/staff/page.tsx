@@ -16,7 +16,6 @@ interface StaffRow {
   display_name: string | null;
 }
 
-const btn = "inline-flex min-h-11 items-center rounded-[var(--radius-control)] border border-steel-300 bg-white px-3 text-sm font-semibold hover:border-steel-900";
 
 export default function StaffAdmin({ searchParams }: PageProps<"/admin/staff">) {
   return (
@@ -54,29 +53,75 @@ async function List() {
               </p>
             </div>
             <div className="flex flex-wrap gap-1.5">
-              <form action={updateStaff.bind(null, r.id, { role: r.role === "owner" ? "editor" : "owner" })}>
-                <button type="submit" className={btn}>
-                  Make {r.role === "owner" ? "editor" : "owner"}
-                  <span className="sr-only"> {r.email}</span>
-                </button>
-              </form>
-              <form action={updateStaff.bind(null, r.id, { active: !r.active })}>
-                <button type="submit" className={btn}>
-                  {r.active ? "Deactivate" : "Reactivate"}
-                  <span className="sr-only"> {r.email}</span>
-                </button>
-              </form>
-              <ConfirmSubmit
-                action={updateStaff.bind(null, r.id, { remove: true })}
-                label={
+              {(() => {
+                const self = r.email === staff.email.toLowerCase();
+                const selfNote = self ? <p className="mt-2 font-semibold text-danger-700">This is your own account.</p> : null;
+                const toRole = r.role === "owner" ? "editor" : "owner";
+                return (
                   <>
-                    Remove<span className="sr-only"> {r.email}</span>
+                    <ConfirmSubmit
+                      tone="caution"
+                      action={updateStaff.bind(null, r.id, { role: toRole })}
+                      label={
+                        <>
+                          Make {toRole}
+                          <span className="sr-only"> {r.email}</span>
+                        </>
+                      }
+                      title={`Make ${r.email} ${toRole === "owner" ? "an owner" : "an editor"}?`}
+                      body={
+                        <>
+                          <p>
+                            {toRole === "owner"
+                              ? "Owners can manage content and the staff list, including removing other owners."
+                              : "Editors can manage content but cannot change the staff list. If this is you, you will lose access to this page immediately."}
+                          </p>
+                          {selfNote}
+                        </>
+                      }
+                      confirmLabel={`Make ${toRole}`}
+                    />
+                    <ConfirmSubmit
+                      tone="caution"
+                      action={updateStaff.bind(null, r.id, { active: !r.active })}
+                      label={
+                        <>
+                          {r.active ? "Deactivate" : "Reactivate"}
+                          <span className="sr-only"> {r.email}</span>
+                        </>
+                      }
+                      title={`${r.active ? "Deactivate" : "Reactivate"} ${r.email}?`}
+                      body={
+                        <>
+                          <p>
+                            {r.active
+                              ? "They will lose admin access immediately, but stay on the list so an owner can reactivate them later."
+                              : "They will be able to sign in to the admin again with this Google account."}
+                          </p>
+                          {selfNote}
+                        </>
+                      }
+                      confirmLabel={r.active ? "Deactivate" : "Reactivate"}
+                    />
+                    <ConfirmSubmit
+                      action={updateStaff.bind(null, r.id, { remove: true })}
+                      label={
+                        <>
+                          Remove<span className="sr-only"> {r.email}</span>
+                        </>
+                      }
+                      title={`Remove ${r.email}?`}
+                      body={
+                        <>
+                          <p>They will lose admin access immediately and be removed from the list. Their past edits are kept.</p>
+                          {selfNote}
+                        </>
+                      }
+                      confirmLabel="Remove access"
+                    />
                   </>
-                }
-                title={`Remove ${r.email}?`}
-                body={<p>They will lose admin access immediately. Their past edits are kept.</p>}
-                confirmLabel="Remove access"
-              />
+                );
+              })()}
             </div>
           </li>
         ))}

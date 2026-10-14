@@ -14,7 +14,22 @@ export interface RecordRow {
   badges?: ReactNode;
 }
 
-export function RecordList({ entity, rows, archived, emptyText, featurable = true }: { entity: Entity; rows: RecordRow[]; archived: boolean; emptyText: string; featurable?: boolean }) {
+export function RecordList({
+  entity,
+  rows,
+  archived,
+  emptyText,
+  featurable = true,
+  canReorder = true,
+}: {
+  entity: Entity;
+  rows: RecordRow[];
+  archived: boolean;
+  emptyText: string;
+  featurable?: boolean;
+  /** false while a search/filter is active (positions would be misleading). */
+  canReorder?: boolean;
+}) {
   return (
     <>
       <ViewTabs base={`/admin/${entity}`} active={archived ? "archived" : "current"} />
@@ -26,7 +41,7 @@ export function RecordList({ entity, rows, archived, emptyText, featurable = tru
         <ul className="space-y-3">
           {rows.map((r, i) => (
             <li key={r.id} className="rounded-[var(--radius-panel)] border border-steel-200 bg-white p-4">
-              <div className="flex flex-wrap items-start justify-between gap-3">
+              <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
                 <div className="min-w-0">
                   <div className="flex flex-wrap items-center gap-2">
                     <StatusPill status={r.status} />
@@ -42,7 +57,7 @@ export function RecordList({ entity, rows, archived, emptyText, featurable = tru
                 </div>
                 <div className="flex flex-wrap items-center gap-1.5">
                   {!archived && featurable && <FeaturedToggle entity={entity} id={r.id} name={r.name} featured={Boolean(r.featured)} />}
-                  {!archived && <MoveButtons entity={entity} id={r.id} name={r.name} first={i === 0} last={i === rows.length - 1} />}
+                  {!archived && canReorder && <MoveButtons entity={entity} id={r.id} name={r.name} first={i === 0} last={i === rows.length - 1} />}
                   <Link href={`/admin/${entity}/${r.id}`} className="inline-flex min-h-11 items-center rounded-[var(--radius-control)] bg-steel-900 px-4 text-sm font-semibold text-white hover:bg-steel-800">
                     Edit<span className="sr-only"> {r.name}</span>
                   </Link>

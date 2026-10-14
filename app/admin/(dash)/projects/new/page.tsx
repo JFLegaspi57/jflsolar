@@ -9,7 +9,7 @@ export const metadata = { title: "New project" };
 export default function NewProject() {
   return (
     <>
-      <PageTitle title="New project" back={{ href: "/admin/projects", label: "All projects" }} intro="Saved as a draft. Add photos after the first save, choose a cover photo, then publish." />
+      <PageTitle title="New project" back={{ href: "/admin/projects", label: "All projects" }} intro="“Save as draft” keeps it hidden; “Save and publish” puts it on the website. Add photos and choose a cover after the first save." />
       <Suspense fallback={<p role="status">Loading…</p>}>
         <Guarded />
       </Suspense>

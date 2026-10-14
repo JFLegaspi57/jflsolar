@@ -9,7 +9,7 @@ export const metadata = { title: "New product" };
 export default function NewProduct() {
   return (
     <>
-      <PageTitle title="New product" back={{ href: "/admin/products", label: "All products" }} intro="Saved as a draft. Add images and a datasheet after the first save." />
+      <PageTitle title="New product" back={{ href: "/admin/products", label: "All products" }} intro="“Save as draft” keeps it hidden; “Save and publish” puts it on the website. Add images and a datasheet after the first save." />
       <Suspense fallback={<p role="status">Loading…</p>}>
         <Guarded />
       </Suspense>
