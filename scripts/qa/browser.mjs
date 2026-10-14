@@ -22,7 +22,10 @@ const browser = await puppeteer.launch({ executablePath, headless: true, args: [
 async function open(path, width, height = 900) {
   const page = await browser.newPage();
   await page.setViewport({ width, height, deviceScaleFactor: 1 });
-  const res = await page.goto(BASE + path, { waitUntil: "networkidle0", timeout: 60000 });
+  // "load" + a short settle: networkidle never settles on deployments with prefetching.
+  const res = await page.goto(BASE + path, { waitUntil: "load", timeout: 60000 });
+  await page.waitForSelector("main", { timeout: 30000 }).catch(() => {});
+  await new Promise((r) => setTimeout(r, 800));
   return { page, status: res?.status() };
 }
 

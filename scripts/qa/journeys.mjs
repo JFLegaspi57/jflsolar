@@ -179,7 +179,10 @@ try {
   const media = await fetch(BASE + "/admin/media/packages/00000000-0000-4000-8000-000000000201/00000000-0000-4000-8000-000000000001/640.webp");
   check("/admin/media without a session is refused", [401, 403].includes(media.status), `status ${media.status}`);
   const pub = await fetch(BASE + "/media/../../etc/passwd");
-  check("Public media route rejects malformed paths", pub.status === 404);
+  // Any refusal is fine (the app returns 404; Vercel's firewall may answer 400/403 first).
+  check("Public media route rejects malformed paths", [400, 403, 404].includes(pub.status), `status ${pub.status}`);
+  const bad = await fetch(BASE + "/media/packages/x/y/640.webp");
+  check("Malformed media path → 404 from the app", bad.status === 404, `status ${bad.status}`);
 } finally {
   await browser.close();
 }
