@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState, useRef, useState } from "react";
+import { useActionState, useEffect, useRef, useState } from "react";
 import { imageOperation, replaceImage, updateImageText, uploadImage, type MediaOwner } from "@/app/admin/actions/media";
 import { initialFormState, type AdminFormState } from "@/lib/admin/form";
 import type { MediaAsset } from "@/lib/types";
@@ -192,6 +192,15 @@ function ImageRow({ img, first, last, coverLabel, showCover }: { img: MediaAsset
   const dialog = useRef<HTMLDialogElement>(null);
   const thumb = `/admin/media/${img.storage_key}/${img.widths.includes(640) ? 640 : img.widths[0]}.webp`;
   const t = textState.values ?? { alt: img.alt, caption: img.caption ?? "" };
+  // Unsaved alt/caption edits: flagged locally and protected on page unload.
+  const [textEditedAt, setTextEditedAt] = useState<number | null>(null);
+  const textDirty = textEditedAt === textState.attempt;
+  useEffect(() => {
+    if (!textDirty) return;
+    const warn = (e: BeforeUnloadEvent) => e.preventDefault();
+    window.addEventListener("beforeunload", warn);
+    return () => window.removeEventListener("beforeunload", warn);
+  }, [textDirty]);
 
   return (
     <li className="grid gap-4 rounded-[var(--radius-control)] border border-steel-200 p-3 sm:grid-cols-[10rem_1fr]">
@@ -204,7 +213,7 @@ function ImageRow({ img, first, last, coverLabel, showCover }: { img: MediaAsset
         </p>
       </div>
       <div className="space-y-3">
-        <form action={saveText} className="grid gap-2 sm:grid-cols-2">
+        <form action={saveText} onChange={() => setTextEditedAt(textState.attempt)} className="grid gap-2 sm:grid-cols-2">
           <div>
             <label htmlFor={`alt-${img.id}`} className="block text-sm font-semibold">
               Alternative text
@@ -234,7 +243,7 @@ function ImageRow({ img, first, last, coverLabel, showCover }: { img: MediaAsset
             <button type="submit" disabled={textPending} className={btn}>
               Save image details
             </button>
-            <Result state={textState} />
+            {textDirty ? <p className="text-sm font-semibold text-warn-800">Unsaved changes</p> : <Result state={textState} />}
           </div>
         </form>
 

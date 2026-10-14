@@ -19,14 +19,17 @@ export default function EditProduct({ params, searchParams }: PageProps<"/admin/
         <Notice searchParams={searchParams} />
       </Suspense>
       <Suspense fallback={<p role="status">Loading…</p>}>
-        <Editor params={params} />
+        <Editor params={params} searchParams={searchParams} />
       </Suspense>
     </>
   );
 }
 
-async function Editor({ params }: Pick<PageProps<"/admin/products/[id]">, "params">) {
+async function Editor({ params, searchParams }: Pick<PageProps<"/admin/products/[id]">, "params" | "searchParams">) {
   const { id } = await params;
+  const back = (await searchParams).back;
+  // Only ever return to the products list (never an arbitrary URL).
+  const backHref = typeof back === "string" && /^\/admin\/products(\?[\w=&%.+-]*)?$/.test(back) ? back : "/admin/products";
   const { db } = await requireStaffPage();
   if (!/^[0-9a-f-]{36}$/.test(id)) notFound();
   const [{ data }, { data: media }, { data: cats }] = await Promise.all([
@@ -43,7 +46,7 @@ async function Editor({ params }: Pick<PageProps<"/admin/products/[id]">, "param
 
   return (
     <>
-      <PageTitle title={product.name} back={{ href: "/admin/products", label: "All products" }} />
+      <PageTitle title={product.name} back={{ href: backHref, label: backHref === "/admin/products" ? "All products" : "Back to your product search" }} />
       <EditHeader previewHref={`/admin/preview/products/${product.id}`} entity="products" id={product.id} name={product.name} status={product.status} isSample={product.is_sample} publicHref={`/products/${product.slug}`} />
       <ProductForm values={productValues(product)} id={product.id} version={product.updated_at} status={product.status} categories={categories} />
       <div className="mb-28 space-y-8">

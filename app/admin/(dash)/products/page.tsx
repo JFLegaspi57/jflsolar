@@ -95,7 +95,12 @@ async function List({ searchParams }: Pick<PageProps<"/admin/products">, "search
           Showing {rows.length} of {all.length}. Reordering is only available when no search is active.
         </p>
       )}
-      <RecordList entity="products" rows={rows} archived={archived} canReorder={!filtering} emptyText={filtering ? "No products match your search." : "No products yet."} />
+      <RecordList
+        entity="products"
+        rows={rows}
+        archived={archived}
+        canReorder={!filtering}
+        keep={new URLSearchParams(Object.entries({ q, category: catFilter }).filter(([, v]) => v)).toString()} emptyText={filtering ? "No products match your search." : "No products yet."} />
     </>
   );
 }

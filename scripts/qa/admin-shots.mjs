@@ -46,7 +46,7 @@ for (;;) {
   await sleep(2000);
 }
 await sleep(3000);
-const browser = await puppeteer.connect({ browserURL: `http://127.0.0.1:${PORT}`, defaultViewport: null });
+const browser = await puppeteer.connect({ browserURL: `http://127.0.0.1:${PORT}`, defaultViewport: null, protocolTimeout: 180000 });
 const work = (await browser.pages()).find((p) => p.url().includes("/admin")) ?? (await browser.newPage());
 console.log("SIGNED_IN — capturing");
 

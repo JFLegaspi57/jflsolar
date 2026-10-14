@@ -21,6 +21,7 @@ export function RecordList({
   emptyText,
   featurable = true,
   canReorder = true,
+  keep = "",
 }: {
   entity: Entity;
   rows: RecordRow[];
@@ -29,10 +30,14 @@ export function RecordList({
   featurable?: boolean;
   /** false while a search/filter is active (positions would be misleading). */
   canReorder?: boolean;
+  /** Current list query (e.g. "q=goodwe&category=…") kept on tabs and in the editor back link. */
+  keep?: string;
 }) {
+  const listUrl = `/admin/${entity}${keep || archived ? "?" : ""}${[archived ? "view=archived" : "", keep].filter(Boolean).join("&")}`;
+  const editHref = (id: string) => `/admin/${entity}/${id}${keep || archived ? `?back=${encodeURIComponent(listUrl)}` : ""}`;
   return (
     <>
-      <ViewTabs base={`/admin/${entity}`} active={archived ? "archived" : "current"} />
+      <ViewTabs base={`/admin/${entity}`} active={archived ? "archived" : "current"} keep={keep} />
       {rows.length === 0 ? (
         <p className="rounded-[var(--radius-panel)] border border-dashed border-steel-300 bg-white p-8 text-center text-steel-700">
           {archived ? "Nothing archived." : emptyText}
@@ -49,7 +54,7 @@ export function RecordList({
                     {r.badges}
                   </div>
                   <h2 className="mt-1.5 text-lg font-bold break-words text-steel-950">
-                    <Link href={`/admin/${entity}/${r.id}`} className="underline-offset-2 hover:underline">
+                    <Link href={editHref(r.id)} className="underline-offset-2 hover:underline">
                       {r.name}
                     </Link>
                   </h2>
@@ -58,7 +63,7 @@ export function RecordList({
                 <div className="flex flex-wrap items-center gap-1.5">
                   {!archived && featurable && <FeaturedToggle entity={entity} id={r.id} name={r.name} featured={Boolean(r.featured)} />}
                   {!archived && canReorder && <MoveButtons entity={entity} id={r.id} name={r.name} first={i === 0} last={i === rows.length - 1} />}
-                  <Link href={`/admin/${entity}/${r.id}`} className="inline-flex min-h-11 items-center rounded-[var(--radius-control)] bg-steel-900 px-4 text-sm font-semibold text-white hover:bg-steel-800">
+                  <Link href={editHref(r.id)} className="inline-flex min-h-11 items-center rounded-[var(--radius-control)] bg-steel-900 px-4 text-sm font-semibold text-white hover:bg-steel-800">
                     Edit<span className="sr-only"> {r.name}</span>
                   </Link>
                 </div>

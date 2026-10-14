@@ -43,7 +43,7 @@ export function FeaturedToggle({ entity, id, name, featured }: { entity: Entity;
     <form action={toggleFeatured.bind(null, entity, id, !featured)}>
       <button
         type="submit"
-        className={`${small} gap-1.5 ${featured ? "border-gold-500 bg-gold-500 text-steel-950 hover:bg-gold-400" : ""}`}
+        className={`inline-flex min-h-11 items-center justify-center gap-1.5 rounded-[var(--radius-control)] border px-3 text-sm font-semibold ${featured ? "border-gold-500 bg-gold-500 text-steel-950 hover:bg-gold-400" : "border-steel-300 bg-white text-steel-900 hover:border-steel-900"}`}
         aria-pressed={featured}
         title={featured ? "Shown on the home page — click to remove" : "Click to show on the home page"}
       >
@@ -63,7 +63,7 @@ export function StatusControls({ entity, id, name, status, returnTo = "list" }: 
     <div className="flex flex-wrap gap-1.5">
       {status === "draft" && (
         <form action={go("published")}>
-          <button type="submit" className={`${small} border-gold-500 bg-gold-500 text-steel-950 hover:bg-gold-400`}>
+          <button type="submit" className="inline-flex min-h-11 items-center justify-center rounded-[var(--radius-control)] border border-gold-500 bg-gold-500 px-3 text-sm font-semibold text-steel-950 hover:bg-gold-400">
             Publish{label}
           </button>
         </form>

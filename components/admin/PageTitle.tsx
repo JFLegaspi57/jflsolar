@@ -28,10 +28,10 @@ export function NewButton({ href, children }: { href: string; children: ReactNod
   );
 }
 
-export function ViewTabs({ base, active }: { base: string; active: "current" | "archived" }) {
+export function ViewTabs({ base, active, keep = "" }: { base: string; active: "current" | "archived"; keep?: string }) {
   const tab = (key: "current" | "archived", label: string) => (
     <Link
-      href={key === "current" ? base : `${base}?view=archived`}
+      href={key === "current" ? (keep ? `${base}?${keep}` : base) : `${base}?view=archived${keep ? `&${keep}` : ""}`}
       aria-current={active === key ? "page" : undefined}
       className="inline-flex min-h-11 items-center rounded-full border border-steel-300 px-4 text-sm font-semibold text-steel-800 aria-[current=page]:border-steel-900 aria-[current=page]:bg-steel-900 aria-[current=page]:text-white"
     >
