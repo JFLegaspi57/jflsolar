@@ -132,3 +132,29 @@ Captured with `scripts/qa/ux-shots.mjs`. **Round 1 verdict: FAIL** (4 MAJOR, 8 M
 - [~] MINOR — Portrait flyer in a wide 16:10 frame is hard to read → "Open full-size image" link added. Kept the 16:10 framing because the owner asked for a 16:10 copy of the flyer; structured specs remain the primary content.
 - [x] Round 2 MINOR — Battery wording differed between card ("After assessment") and comparison ("Not included") → shared rule.
 - [x] Round 2 MINOR — Mobile combined capacity lacked labels → "Inverter … · Solar array … · Battery …".
+
+## Round UX-2 — Admin visual review from screenshots (Codex, 2026-10-14)
+
+Codex reviewed 16 signed-in admin screens (live Vercel, 1280/390 px, plus validation
+state) captured with `scripts/qa/admin-shots.mjs`, as senior UX lead for non-technical
+staff. **Round 1: FAIL** (3 MAJOR, 13 MINOR). **Round 2: PASS** (13 verified, 2 open, 1
+accepted deferral). Rounds 3–5 rechecked the open items against the diff plus live evidence.
+
+- [x] MAJOR — Staff role/deactivate actions applied instantly, even to your own account → all staff actions confirm, name the account, warn on self-actions.
+- [x] MAJOR — Content block key/section editable as raw identifiers → placement shown in plain words, existing keys locked, internals under "Advanced".
+- [x] MAJOR — Unpublish/Archive acted instantly and looked like ordinary buttons → neutral confirmations explaining the effect; archived items offer "Restore as draft".
+- [x] MINOR — Unconfirmed blocks said "Shown" → "Preview only — awaiting confirmation".
+- [x] MINOR — New-item intro contradicted "Save and publish" → intro describes both paths.
+- [x] MINOR — Long product list without search → name/brand/model search + category filter; reordering hidden while filtering. Round 2: filters lost on tabs/editor → preserved in status tabs and editor back link (validated `?back=`, falls back to the list). Verified live.
+- [x] MINOR — Star-only featured control → "★ Featured" / "☆ Feature" with gold selected state (class conflict fixed; verified live: rgb(255,176,4)).
+- [x] MINOR — Mobile row actions moved around → consistent action row under record info.
+- [~] MINOR — Components/specs use pipe/colon text formats → **accepted deferral**: documented formats with examples; repeatable rows are a later improvement.
+- [x] MINOR — Price fields shown in quotation mode → hidden with an explanation.
+- [x] MINOR — kW/kWp/kWh unexplained → plain-language hints with examples.
+- [x] MINOR — Image details vs main Save unclear → "Saved separately" badge, "Save image details", local "Unsaved changes". Round 3: no in-app navigation guard → shared `useUnsavedGuard` (links, other forms, unload). Round 4: failed save cleared dirty state → stays dirty until a successful save. Verified live (confirm on link click; invalid alt keeps value + "Unsaved changes").
+- [x] Round 4 MEDIUM — Dirty indicator hid server error messages → error shown alongside.
+- [x] Round 4 LOW — Two dirty sections prompted twice per navigation → one confirmation per action.
+- [x] MINOR — Saved-card preview looked empty → "▸ Show saved card preview".
+- [x] MINOR — Same image guidance everywhere → tailored per packages/products/projects/founder.
+- [x] MINOR — Empty new package reported "URL slug is required" → name error only.
+- [x] MINOR — Founder editor buried text below photo/delete → content, photo, then danger section.

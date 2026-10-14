@@ -60,4 +60,5 @@ Still pending:
 - [x] Admin: Google sign-in + allowlist, roles, CRUD for packages/products/categories/projects/content blocks/settings/staff, media manager, datasheets, draft preview, promotion-expiry indicators, overview launch checklist
 - [x] Codex M3 review (12 findings) — fixed; awaiting Codex recheck in M4
 - [x] Docs: README, docs/SETUP.md, docs/OWNER-GUIDE.md, docs/DESIGN.md, .env.example; scripts: check, launch:check, admin:grant, QA journeys/axe
+- [x] Codex admin visual review (UX-2): 3 MAJOR + 13 MINOR fixed and verified on live Vercel; repeatable component/spec rows deferred (see REVIEW.md)
 - [x] Verification: lint ✓, typecheck ✓, 18/18 tests ✓, production build ✓, 38/38 browser journeys ✓ (prod build, demo mode), axe WCAG 2.2 AA 0 violations on 17 routes × 2 widths, no overflow at 320 px, real 404s

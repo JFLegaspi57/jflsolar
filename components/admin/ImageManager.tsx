@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState, useEffect, useRef, useState } from "react";
+import { useActionState, useRef, useState } from "react";
 import { imageOperation, replaceImage, updateImageText, uploadImage, type MediaOwner } from "@/app/admin/actions/media";
 import { initialFormState, type AdminFormState } from "@/lib/admin/form";
 import type { MediaAsset } from "@/lib/types";
@@ -240,7 +240,8 @@ function ImageRow({ img, first, last, coverLabel, showCover }: { img: MediaAsset
             <button type="submit" disabled={textPending} className={btn}>
               Save image details
             </button>
-            {textDirty ? <p className="text-sm font-semibold text-warn-800">Unsaved changes</p> : <Result state={textState} />}
+            {textState.status === "error" && <Result state={textState} />}
+            {textDirty ? <p className="text-sm font-semibold text-warn-800">Unsaved changes</p> : textState.status !== "error" && <Result state={textState} />}
           </div>
         </form>
 
