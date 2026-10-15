@@ -66,12 +66,24 @@ two-project production setup for the eventual handover.
    preview shows a database error, open the Supabase dashboard and click
    **Restore project**.
 
-**Handover to JFL Solar:** they create their own GitHub/Vercel/Supabase accounts,
-clone/fork this repository, and follow sections 1–6 (two projects, production
-mode, Vercel Pro recommended for commercial use, Resend with `info@jflsolar.com`
-or their final inbox). Content edited in the prototype can be exported from the
-Supabase dashboard (*Table Editor → Export* / database backup) if they want to keep it;
-uploaded photos live in the `media` storage bucket and must be copied separately.
+**Handover to JFL Solar:** they create their own GitHub/Vercel/Supabase/Google
+Cloud accounts, the repository is transferred to them, and sections 1–6 are
+followed with their domain **jflsolar.ph** (Vercel Pro recommended for commercial
+use). To carry over everything edited on the prototype — settings, content blocks,
+categories, packages, products, projects, staff list, and every referenced photo
+and datasheet in the `media` bucket — apply the migrations to the new, **unseeded**
+project, then run:
+
+```bash
+# .env.migrate.local (git-ignored): FROM_/TO_SUPABASE_URL and FROM_/TO_SUPABASE_SECRET_KEY
+npm run migrate:content            # dry run: counts, file check, target-empty check
+npm run migrate:content -- --apply # files first, then rows parent-first, then row-count check
+npm run migrate:content -- --apply --resume  # only if a copy stopped part-way
+```
+
+Sign-in accounts are not copied; staff sign in with Google again (access is by
+email). The step-by-step owner-facing version is the "JFL Solar Website —
+Migration Guide" document.
 
 ## 1. Supabase — two projects (production handover)
 

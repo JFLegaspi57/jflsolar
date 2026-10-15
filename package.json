@@ -14,7 +14,8 @@
     "brand:assets": "node scripts/build-brand-assets.mjs",
     "admin:grant": "tsx scripts/admin-grant.mts",
     "launch:check": "tsx scripts/launch-check.mts",
-    "qa:browser": "node scripts/qa/browser.mjs"
+    "qa:browser": "node scripts/qa/browser.mjs",
+    "migrate:content": "tsx scripts/migrate-content.mts"
   },
   "dependencies": {
     "@supabase/ssr": "^0.12.7",
