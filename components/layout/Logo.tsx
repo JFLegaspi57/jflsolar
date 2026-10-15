@@ -4,8 +4,9 @@ import logo from "@/public/brand/jfl-solar-logo.png";
 import symbol from "@/public/brand/jfl-symbol.png";
 
 /**
- * Owner-supplied lockup on its own white background (not transparent).
- * On dark surfaces pass `plate` to sit it on a deliberate white plate.
+ * Owner-supplied lockup with its white background made transparent (see
+ * scripts/build-brand-assets.mjs). The lettering is dark slate, so on dark
+ * surfaces pass `plate` to sit it on a deliberate white plate.
  */
 export function Logo({ plate = false, priority = false, className = "" }: { plate?: boolean; priority?: boolean; className?: string }) {
   return (

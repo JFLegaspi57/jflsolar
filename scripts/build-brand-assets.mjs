@@ -13,11 +13,26 @@ await mkdir("public/brand", { recursive: true });
 // Full horizontal lockup: trim the near-white margin, keep native resolution
 // (710 px wide source; displayed at <= 240 CSS px, so it covers 2x screens).
 const horizontal = sharp(SRC_H).flatten({ background: WHITE }).trim({ background: "#ffffff", threshold: 12 });
-const hMeta = await horizontal.clone().png().toBuffer({ resolveWithObject: true });
-await sharp(hMeta.data)
+// The source sits on opaque white, which shows as a box over the translucent
+// sticky header. "Colour to alpha" removes the white exactly (like GIMP's
+// filter), so anti-aliased edges stay smooth on any light surface. Dark
+// surfaces still use a white plate (the lettering is dark slate).
+const { data: px, info } = await horizontal
+  .clone()
   .extend({ top: 6, bottom: 6, left: 6, right: 6, background: WHITE })
-  .png({ compressionLevel: 9, palette: true, quality: 95 })
-  .toFile("public/brand/jfl-solar-logo.png");
+  .ensureAlpha()
+  .raw()
+  .toBuffer({ resolveWithObject: true });
+for (let i = 0; i < px.length; i += 4) {
+  const a = Math.max(255 - px[i], 255 - px[i + 1], 255 - px[i + 2]) / 255;
+  if (a === 0) {
+    px[i + 3] = 0;
+    continue;
+  }
+  for (let k = 0; k < 3; k++) px[i + k] = Math.round(255 - (255 - px[i + k]) / a);
+  px[i + 3] = Math.round(a * 255);
+}
+await sharp(px, { raw: info }).png({ compressionLevel: 9 }).toFile("public/brand/jfl-solar-logo.png");
 
 // Symbol: trim, then centre on a white square with breathing room.
 const symTrim = await sharp(SRC_S).flatten({ background: WHITE }).trim({ background: "#ffffff", threshold: 12 }).png().toBuffer({ resolveWithObject: true });

@@ -132,6 +132,10 @@ inside the same Next.js app.
 - Logos come from the owner's attachments (white background, not transparent).
   They are cropped/resized only — never redrawn. Header and footer place the
   full lockup on white; dark sections use a deliberate white plate.
+  *Update 2026-10-15:* the opaque white box showed over the translucent sticky
+  header while scrolling, so the build script now removes the white with an
+  exact "colour to alpha" step (artwork unchanged, edges stay smooth). Dark
+  surfaces keep the white plate because the lettering is dark slate.
 - Colours sampled from the files: slate `#333F4F`, solar gold `#FFB004`
   (wordmark), sun yellow `#FED404`. Gold fails contrast as text on white
   (≈1.9:1), so gold is used as a **fill** with slate text (≈6.3:1) and as accent
