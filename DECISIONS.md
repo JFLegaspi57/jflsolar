@@ -223,6 +223,12 @@ Revisit if the business grows to several editors working on the same records.
   from the JFL Solar banner). `scripts/process-hero.mjs` crops off the banner's
   address/website bars, removes the overlaid headline and logo with a seamless
   sky fill, and applies light enhancement → `public/images/hero-rooftop.jpg`.
+- *Update 2026-10-16:* the owner supplied a clean high-resolution photo
+  (`docs/reference/hero-source.jpg`, 1280×577, no overlaid text), so the sky-fill
+  retouching is retired. The script now only applies a light enhancement at native
+  size (the previous output had been upscaled to 1920 px). The owner's
+  high-resolution logo and icon files replaced the logo sources at the same time;
+  the icon's wordmark is cropped off for the favicon and admin symbol.
 - Supersedes D7's "no photography until approved" for this image: the owner
   supplied and requested it. Alt text describes the scene only; it makes no
   claim about which project it shows.

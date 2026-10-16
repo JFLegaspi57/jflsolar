@@ -15,7 +15,7 @@ export default function OpengraphImage() {
       <div style={{ width: "100%", height: "100%", display: "flex", flexDirection: "column", background: "#1f2733", padding: 64 }}>
         <div style={{ display: "flex", background: "#ffffff", borderRadius: 16, padding: 28, alignSelf: "flex-start" }}>
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={logo} width={560} height={161} alt="" />
+          <img src={logo} width={560} height={158} alt="" />
         </div>
         <div style={{ display: "flex", flexDirection: "column", marginTop: "auto" }}>
           <div style={{ width: 96, height: 8, background: "#ffb004", borderRadius: 4 }} />

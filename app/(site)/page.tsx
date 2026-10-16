@@ -29,7 +29,7 @@ export default async function HomePage() {
 
   return (
     <>
-      {/* Hero — owner-supplied rooftop photo (docs/reference/hero-source.png, cleaned by scripts/process-hero.mjs) */}
+      {/* Hero — owner-supplied rooftop photo (docs/reference/hero-source.jpg, enhanced by scripts/process-hero.mjs) */}
       <section aria-labelledby="hero-title" className="on-dark relative isolate overflow-hidden bg-steel-950 text-white">
         {/* Mobile/tablet: photo band above the text. Desktop: full-bleed background. */}
         <div className="relative h-56 sm:h-80 lg:absolute lg:inset-y-0 lg:left-0 lg:-z-20 lg:h-auto lg:w-[62%]">
