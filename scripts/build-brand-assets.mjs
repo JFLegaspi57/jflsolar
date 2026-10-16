@@ -37,54 +37,22 @@ for (let i = 0; i < px.length; i += 4) {
 }
 await sharp(px, { raw: info }).png({ compressionLevel: 9 }).toFile("public/brand/jfl-solar-logo.png");
 
-// Symbol: the owner's icon file stacks the symbol above a "JFL Solar" wordmark,
-// which is unreadable at favicon size. Keep only the first band of artwork
-// (rows down to the first fully blank gap), then trim and centre it on a white
-// square with breathing room.
-const flat = await sharp(SRC_S).flatten({ background: WHITE }).raw().toBuffer({ resolveWithObject: true });
-const { width: sw, height: sh, channels: sc } = flat.info;
-const inkRow = (y) => {
-  for (let x = 0; x < sw; x++) {
-    const i = (y * sw + x) * sc;
-    if (flat.data[i] < 200 || flat.data[i + 2] < 200) return true;
-  }
-  return false;
-};
-// Bands of rows containing artwork, separated by fully blank rows. The last
-// band is the wordmark; everything above it (including any detached sun ray)
-// is the symbol.
-const bands = [];
-for (let y = 0, start = -1; y <= sh; y++) {
-  const ink = y < sh && inkRow(y);
-  if (ink && start < 0) start = y;
-  if (!ink && start >= 0) {
-    bands.push([start, y - 1]);
-    start = -1;
-  }
-}
-if (bands.length < 2) {
-  throw new Error(`${SRC_S}: expected the symbol above a wordmark with a blank gap between them; found ${bands.length} band(s). Crop the file by hand.`);
-}
-const end = bands.at(-2)[1];
-// Two passes: sharp applies trim before extract within a single pipeline.
-const symBand = await sharp(flat.data, { raw: flat.info })
-  .extract({ left: 0, top: 0, width: sw, height: Math.min(sh, end + 1) })
-  .png()
-  .toBuffer();
-const symTrim = await sharp(symBand)
-  .trim({ background: "#ffffff", threshold: 12 })
-  .png()
-  .toBuffer({ resolveWithObject: true });
-const side = Math.round(Math.max(symTrim.info.width, symTrim.info.height) * 1.18);
-const square = await sharp({ create: { width: side, height: side, channels: 4, background: WHITE } })
-  .composite([{ input: symTrim.data, gravity: "centre" }])
+// Icon: the owner's circular badge (white circle with the symbol above a
+// "JFL Solar" wordmark) is used whole. Trim the transparent margin and pad to
+// a square, keeping the area outside the circle transparent.
+const badge = await sharp(SRC_S).ensureAlpha().trim().png().toBuffer({ resolveWithObject: true });
+const side = Math.max(badge.info.width, badge.info.height);
+const square = await sharp({ create: { width: side, height: side, channels: 4, background: { r: 0, g: 0, b: 0, alpha: 0 } } })
+  .composite([{ input: badge.data, gravity: "centre" }])
   .png()
   .toBuffer();
 
-await sharp(square).png({ compressionLevel: 9 }).toFile("public/brand/jfl-symbol.png");
-// Favicon / app icons (downsized only).
+await sharp(square).resize(512, 512).png({ compressionLevel: 9 }).toFile("public/brand/jfl-symbol.png");
+// Browser-tab icon keeps the transparent corners, so it shows as a circle.
 await sharp(square).resize(192, 192).png({ compressionLevel: 9 }).toFile("app/icon.png");
-await sharp(square).resize(180, 180).png({ compressionLevel: 9 }).toFile("app/apple-icon.png");
+// iOS fills transparency with black, so the home-screen icon sits on white
+// (the system rounds its corners).
+await sharp(square).resize(180, 180).flatten({ background: WHITE }).png({ compressionLevel: 9 }).toFile("app/apple-icon.png");
 
 const out = await sharp("public/brand/jfl-solar-logo.png").metadata();
-console.log("logo", out.width, "x", out.height, "| symbol square", side);
+console.log("logo", out.width, "x", out.height, "| icon badge", side);

@@ -24,9 +24,7 @@ async function Shell({ children }: { children: React.ReactNode }) {
       <header className="on-dark bg-steel-950 text-white lg:fixed lg:inset-y-0 lg:left-0 lg:flex lg:w-64 lg:flex-col">
         <div className="flex items-center justify-between gap-3 px-4 py-3 lg:block lg:px-5 lg:py-6">
           <Link href="/admin" className="flex items-center gap-3">
-            <span className="rounded bg-white p-1">
-              <LogoSymbol className="size-8" />
-            </span>
+            <LogoSymbol className="size-10 shrink-0" />
             <span className="leading-tight">
               <span className="block font-display font-bold">JFL Solar</span>
               <span className="block text-xs text-steel-300">Website admin</span>
